@@ -1,0 +1,84 @@
+@import '@fontsource-variable/archivo/wdth.css';
+@import 'tailwindcss';
+
+/* Tokens da seção 8. Status sempre com rótulo em texto; a cor é reforço. */
+@theme {
+  --font-sans: 'Archivo Variable', 'Segoe UI', system-ui, sans-serif;
+
+  --color-tinta: #14213d;
+  --color-azul-placa: #003399;
+  --color-azul-placa-hover: #002a80;
+  --color-papel: #f6f7f9;
+  --color-superficie: #ffffff;
+  --color-superficie-selecionada: #eef2fa;
+  --color-linha: #d9dee5;
+  --color-grafite: #5b6472;
+  --color-alerta-parado: #b4461b;
+  --color-erro: #b42318;
+  --color-erro-fundo: #fef3f2;
+
+  --color-status-nova: #003399;
+  --color-status-em-proposta: #8a5a00;
+  --color-status-proposta-emitida: #0f6e74;
+  --color-status-faturada: #1f7a3a;
+  --color-status-concluida: #5b6472;
+  --color-status-pendente: #b4461b;
+  --color-status-cancelada: #8b93a1;
+
+  --radius-sm: 4px;
+  --radius-placa: 6px;
+
+  --animate-surgir: surgir 160ms ease-out;
+  @keyframes surgir {
+    from {
+      opacity: 0;
+      transform: translateY(4px);
+    }
+  }
+}
+
+@layer base {
+  html,
+  body,
+  #root {
+    height: 100%;
+  }
+
+  body {
+    @apply bg-papel text-tinta font-sans antialiased;
+    font-size: 14px;
+    line-height: 20px;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-azul-placa);
+    outline-offset: 2px;
+  }
+
+  ::selection {
+    background: var(--color-superficie-selecionada);
+  }
+}
+
+@utility numeros {
+  font-variant-numeric: tabular-nums;
+}
+
+/* Tipografia da placa: Archivo no corte mais condensado. */
+@utility tipo-placa {
+  font-stretch: 62%;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  font-variant-numeric: tabular-nums;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
