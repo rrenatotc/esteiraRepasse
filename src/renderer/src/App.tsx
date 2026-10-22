@@ -9,6 +9,8 @@ import { Entrar } from './features/auth/Entrar'
 import { Configuracoes } from './features/configuracoes/Configuracoes'
 import { ConsultaPublica } from './features/consulta/ConsultaPublica'
 import { Estoque } from './features/estoque/Estoque'
+import { Lojistas } from './features/lojistas/Lojistas'
+import { RegistrarVenda } from './features/vendas/RegistrarVenda'
 
 const queryClient = new QueryClient({
   defaultOptions: { queries: { retry: 1, refetchOnWindowFocus: false } }
@@ -42,7 +44,7 @@ const router = createHashRouter([
             path: 'vendas/nova',
             element: (
               <Protegida papeis={['vendedor', 'repasse']}>
-                <EmConstrucao titulo="Registrar venda" fase={3} descricao="Placa, lojista, valor e loja da proposta, com revisão antes de enviar." />
+                <RegistrarVenda />
               </Protegida>
             )
           },
@@ -74,7 +76,7 @@ const router = createHashRouter([
             path: 'lojistas',
             element: (
               <Protegida papeis={['repasse']}>
-                <EmConstrucao titulo="Lojistas" fase={3} descricao="Cadastro com consulta de CNPJ na BrasilAPI." />
+                <Lojistas />
               </Protegida>
             )
           },

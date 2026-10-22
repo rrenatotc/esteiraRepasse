@@ -486,6 +486,45 @@ export type Database = {
       }
       placa_para_mercosul: { Args: { p: string }; Returns: string }
       previa_estoque: { Args: { p_itens: Json }; Returns: Json }
+      registrar_venda: {
+        Args: {
+          p_loja_proposta_id: number
+          p_lojista_id?: string
+          p_lojista_novo?: Json
+          p_observacao?: string
+          p_placa: string
+          p_valor_venda: number
+          p_veiculo_manual?: Json
+        }
+        Returns: {
+          codigo: number
+          created_at: string
+          data_emissao_nf: string | null
+          data_emissao_proposta: string | null
+          id: string
+          loja_proposta_id: number
+          lojista_id: string
+          motivo_ultimo: string | null
+          numero_nf: string | null
+          numero_proposta: string | null
+          observacao: string | null
+          placa: string
+          placa_busca: string
+          responsavel_id: string | null
+          status: Database["public"]["Enums"]["status_demanda"]
+          updated_at: string
+          valor_venda: number
+          veiculo_id: string
+          veiculo_snapshot: Json
+          vendedor_id: string
+        }
+        SetofOptions: {
+          from: "*"
+          to: "demandas"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
       rotulo_status: {
         Args: { p: Database["public"]["Enums"]["status_demanda"] }
         Returns: string
