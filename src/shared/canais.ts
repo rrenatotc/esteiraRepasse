@@ -17,5 +17,10 @@ export const CANAIS = {
   estoqueLerMaisRecente: 'estoque:ler-mais-recente',
   estoqueUltimaLeitura: 'estoque:ultima-leitura',
   eventoEstoqueNovoArquivo: 'evento:estoque-novo-arquivo',
-  arquivoSalvar: 'arquivo:salvar'
+  arquivoSalvar: 'arquivo:salvar',
+  atualizacaoEstado: 'atualizacao:estado',
+  atualizacaoProcurar: 'atualizacao:procurar',
+  atualizacaoReiniciar: 'atualizacao:reiniciar',
+  appNovidades: 'app:novidades',
+  eventoAtualizacao: 'evento:atualizacao'
 } as const

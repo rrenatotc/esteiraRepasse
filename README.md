@@ -19,6 +19,9 @@ npm run dev
 | `npm run db:push` | aplica as migrations e o seed no projeto Supabase ligado |
 | `npm run db:types` | regenera `src/shared/database.types.ts` a partir do banco |
 | `node scripts/screenshots.mts` | screenshots do app buildado em 1024 e 1600 px |
+| `npm run e2e` | E2E do ciclo completo (ver `e2e/ciclo.e2e.ts`) |
+| `npm run build:win` | gera o instalador em `dist/` sem publicar |
+| `npm run release` | testes + instalador + publicação no GitHub Releases (ver `docs/publicar-versao.md`) |
 
 ## Ligar ao Supabase (uma vez)
 
@@ -41,3 +44,10 @@ No painel do Supabase, em Authentication → Sign In / Providers, desligue
 - `src/renderer` — telas (React, Tailwind, TanStack Query)
 - `src/shared` — placa, documento (CPF/CNPJ alfanumérico), moeda, horas úteis, contrato de IPC
 - `supabase/migrations` — schema, RLS e RPCs; `supabase/tests` — testes de banco
+
+## Documentos
+
+- `docs/instalacao-vendedores.md` — guia de instalação de uma página
+- `docs/liberacao-ti.md` — endereços para liberar no firewall/proxy
+- `docs/publicar-versao.md` — como publicar uma versão e o auto-update
+

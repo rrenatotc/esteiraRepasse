@@ -53,6 +53,14 @@ export const configSchema = z.object({
 export type Config = z.infer<typeof configSchema>
 export const configParcialSchema = configSchema.partial()
 
+export type EstadoAtualizacao =
+  | { tipo: 'desenvolvimento' }
+  | { tipo: 'procurando' }
+  | { tipo: 'atualizado' }
+  | { tipo: 'baixando'; versao: string; progresso: number }
+  | { tipo: 'pronta'; versao: string }
+  | { tipo: 'erro'; mensagem: string }
+
 export interface AppInfo {
   versao: string
   installId: string

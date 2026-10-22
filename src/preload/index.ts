@@ -2,7 +2,8 @@
 import { contextBridge, ipcRenderer, type IpcRendererEvent } from 'electron'
 import { CANAIS } from '../shared/canais'
 import type { LeituraEstoque, StatusObservacao } from '../shared/estoque'
-import type { AppInfo, Config, Contador, Notificacao, SalvarArquivo } from '../shared/ipc'
+import type { AppInfo, Config, Contador, EstadoAtualizacao, Notificacao, SalvarArquivo } from '../shared/ipc'
+import type { Novidade } from '../shared/novidades'
 
 const api = {
   sessao: {
@@ -33,6 +34,17 @@ const api = {
       const ouvinte = (_: IpcRendererEvent, leitura: LeituraEstoque): void => cb(leitura)
       ipcRenderer.on(CANAIS.eventoEstoqueNovoArquivo, ouvinte)
       return () => ipcRenderer.off(CANAIS.eventoEstoqueNovoArquivo, ouvinte)
+    }
+  },
+  atualizacao: {
+    estado: (): Promise<EstadoAtualizacao> => ipcRenderer.invoke(CANAIS.atualizacaoEstado),
+    procurar: (): Promise<EstadoAtualizacao> => ipcRenderer.invoke(CANAIS.atualizacaoProcurar),
+    reiniciar: (): Promise<void> => ipcRenderer.invoke(CANAIS.atualizacaoReiniciar),
+    novidades: (): Promise<Novidade[]> => ipcRenderer.invoke(CANAIS.appNovidades),
+    onEstado: (cb: (e: EstadoAtualizacao) => void): (() => void) => {
+      const ouvinte = (_: IpcRendererEvent, e: EstadoAtualizacao): void => cb(e)
+      ipcRenderer.on(CANAIS.eventoAtualizacao, ouvinte)
+      return () => ipcRenderer.off(CANAIS.eventoAtualizacao, ouvinte)
     }
   },
   arquivo: {

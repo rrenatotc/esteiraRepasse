@@ -1,6 +1,7 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { useEffect } from 'react'
 import { createHashRouter, Outlet, RouterProvider, useNavigate } from 'react-router-dom'
+import { AvisoAtualizacao, Novidades } from './app/Atualizacao'
 import { AuthProvider } from './app/auth'
 import { Layout } from './app/Layout'
 import { IrParaInicio, Protegida } from './app/Protegida'
@@ -25,7 +26,15 @@ const queryClient = new QueryClient({
 function Raiz(): React.JSX.Element {
   const navegar = useNavigate()
   useEffect(() => window.esteira.app.onNavegar((rota) => navegar(`/app${rota}`)), [navegar])
-  return <Outlet />
+  return (
+    <div className="flex h-full flex-col">
+      <AvisoAtualizacao />
+      <div className="min-h-0 flex-1">
+        <Outlet />
+      </div>
+      <Novidades />
+    </div>
+  )
 }
 
 const router = createHashRouter([

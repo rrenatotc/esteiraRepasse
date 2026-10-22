@@ -5,6 +5,7 @@ import { criarBandeja } from './bandeja'
 import { encerrar as encerrarEstoque } from './estoque'
 import { registrarIpc } from './ipc'
 import { criarJanela, marcarSaindo, mostrarJanela } from './janela'
+import { iniciarAtualizador } from './updater'
 
 log.initialize()
 log.transports.file.maxSize = 5 * 1024 * 1024 // electron-log rotaciona em main.old.log
@@ -22,6 +23,7 @@ if (!app.requestSingleInstanceLock()) {
     registrarIpc()
     const janela = criarJanela()
     criarBandeja()
+    iniciarAtualizador()
 
     // Iniciado com o Windows: fica só na bandeja.
     if (process.argv.includes('--oculto')) janela.once('ready-to-show', () => janela.hide())

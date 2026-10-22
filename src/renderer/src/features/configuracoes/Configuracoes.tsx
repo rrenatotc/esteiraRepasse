@@ -1,6 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useState, type ReactNode } from 'react'
 import type { Config } from '@shared/ipc'
+import { useEstadoAtualizacao } from '@renderer/app/Atualizacao'
 import { useAuth } from '@renderer/app/auth'
 import { Pagina } from '@renderer/components/Pagina'
 import { Button } from '@renderer/components/ui/button'
@@ -134,6 +135,41 @@ function PastaBravos({ pasta }: { pasta: string | null }): React.JSX.Element {
   )
 }
 
+function SobreVersao({ versao }: { versao: string | undefined }): React.JSX.Element {
+  const estado = useEstadoAtualizacao()
+  const procurar = useMutation({ mutationFn: () => window.esteira.atualizacao.procurar() })
+  const texto = !estado
+    ? ''
+    : estado.tipo === 'desenvolvimento'
+      ? 'Versão de desenvolvimento: atualização automática desligada.'
+      : estado.tipo === 'procurando'
+        ? 'Procurando atualização…'
+        : estado.tipo === 'atualizado'
+          ? 'Você está na versão mais recente.'
+          : estado.tipo === 'baixando'
+            ? `Baixando a versão ${estado.versao} (${estado.progresso}%)…`
+            : estado.tipo === 'pronta'
+              ? `Versão ${estado.versao} pronta. Use "Reiniciar para atualizar" no topo da tela.`
+              : estado.mensagem
+  return (
+    <div className="flex flex-col gap-3">
+      <p>
+        <span className="numeros">Versão {versao ?? '—'}</span>
+        <span className="block text-[13px] text-grafite">{texto}</span>
+      </p>
+      <div>
+        <Button
+          variante="secundario"
+          onClick={() => procurar.mutate()}
+          disabled={procurar.isPending || estado?.tipo === 'desenvolvimento' || estado?.tipo === 'baixando'}
+        >
+          Procurar atualização
+        </Button>
+      </div>
+    </div>
+  )
+}
+
 export function Configuracoes(): React.JSX.Element {
   const { perfil, sessao, sair } = useAuth()
   const queryClient = useQueryClient()
@@ -193,7 +229,7 @@ export function Configuracoes(): React.JSX.Element {
       )}
 
       <Secao titulo="Sobre">
-        <p className="numeros text-grafite">Versão {info.data?.versao ?? '—'}</p>
+        <SobreVersao versao={info.data?.versao} />
       </Secao>
     </Pagina>
   )

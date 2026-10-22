@@ -22,6 +22,8 @@ import {
 } from '../shared/ipc'
 import { atualizarContador } from './bandeja'
 import * as estoque from './estoque'
+import { novidadesDesde, type Novidade } from '../shared/novidades'
+import { estadoAtualizacao, procurarAtualizacao, reiniciarParaAtualizar } from './updater'
 import { janelaPrincipal } from './janela'
 import { notificar } from './notificacoes'
 import { lerSessao, removerSessao, salvarSessao } from './sessao'
@@ -94,6 +96,17 @@ export function registrarIpc(): void {
     await writeFile(filePath, Buffer.from(base64, 'base64'))
     log.info(`Exportação salva em ${filePath}`)
     return filePath
+  })
+
+  tratar(CANAIS.atualizacaoEstado, () => estadoAtualizacao())
+  tratar(CANAIS.atualizacaoProcurar, () => procurarAtualizacao())
+  tratar(CANAIS.atualizacaoReiniciar, () => reiniciarParaAtualizar())
+  // Novidades desde a última versão vista; na 1ª instalação não mostra nada.
+  tratar(CANAIS.appNovidades, (): Novidade[] => {
+    const atual = app.getVersion()
+    const vista = store.get('ultimaVersaoVista')
+    store.set('ultimaVersaoVista', atual)
+    return vista ? novidadesDesde(vista, atual) : []
   })
 
   tratar(CANAIS.configLer, (): Config => lerConfig())

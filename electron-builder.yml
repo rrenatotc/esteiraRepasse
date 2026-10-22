@@ -1,43 +1,46 @@
-appId: com.electron.app
-productName: esteira-repasse
+# Instalador Windows (seção 9.1). Publicação no GitHub Releases do repositório
+# público rrenatotc/esteiraRepasse; o electron-updater lê de lá.
+appId: br.com.carburgo.esteira-repasse
+productName: Esteira do Repasse
+copyright: Grupo Carburgo
 directories:
   buildResources: build
 files:
   - '!**/.vscode/*'
   - '!src/*'
+  - '!e2e/*'
+  - '!supabase/*'
+  - '!docs/*'
+  - '!scripts/*'
+  - '!screenshots/*'
   - '!electron.vite.config.{js,ts,mjs,cjs}'
+  - '!{vitest.config.mts,playwright.config.ts}'
   - '!{.eslintcache,eslint.config.mjs,.prettierignore,.prettierrc.yaml,dev-app-update.yml,CHANGELOG.md,README.md}'
   - '!{.env,.env.*,.npmrc,pnpm-lock.yaml}'
   - '!{tsconfig.json,tsconfig.node.json,tsconfig.web.json}'
 asarUnpack:
   - resources/**
 win:
-  executableName: esteira-repasse
-nsis:
-  artifactName: ${name}-${version}-setup.${ext}
-  shortcutName: ${productName}
-  uninstallDisplayName: ${productName}
-  createDesktopShortcut: always
-mac:
-  entitlementsInherit: build/entitlements.mac.plist
-  extendInfo:
-    - NSCameraUsageDescription: Application requests access to the device's camera.
-    - NSMicrophoneUsageDescription: Application requests access to the device's microphone.
-    - NSDocumentsFolderUsageDescription: Application requests access to the user's Documents folder.
-    - NSDownloadsFolderUsageDescription: Application requests access to the user's Downloads folder.
-  notarize: false
-dmg:
-  artifactName: ${name}-${version}.${ext}
-linux:
   target:
-    - AppImage
-    - snap
-    - deb
-  maintainer: electronjs.org
-  category: Utility
-appImage:
-  artifactName: ${name}-${version}.${ext}
+    - target: nsis
+      arch: [x64]
+  executableName: EsteiraRepasse
+  icon: build/icon.ico
+  # Assinatura de código: sem certificado o SmartScreen avisa na 1ª instalação
+  # (ver docs/instalacao-vendedores.md). Quando houver certificado, configure
+  # aqui (signtoolOptions ou azureSignOptions) e nada mais muda.
+nsis:
+  oneClick: true
+  perMachine: false          # instala no perfil do usuário, sem pedir administrador
+  allowElevation: false
+  artifactName: EsteiraRepasse-Setup-${version}.${ext}
+  shortcutName: Esteira do Repasse
+  uninstallDisplayName: Esteira do Repasse
+  createDesktopShortcut: always
+  createStartMenuShortcut: true
 npmRebuild: false
 publish:
-  provider: generic
-  url: https://example.com/auto-updates
+  provider: github
+  owner: rrenatotc
+  repo: esteiraRepasse
+  releaseType: release

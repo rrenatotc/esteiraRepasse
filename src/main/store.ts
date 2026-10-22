@@ -6,6 +6,8 @@ interface Esquema extends Config {
   installId: string
   /** Sessão do Supabase por chave, cifrada com safeStorage (base64). */
   sessao: Record<string, string>
+  /** Última versão cujas novidades o usuário já viu. */
+  ultimaVersaoVista: string | null
 }
 
 export const store = new Store<Esquema>({
@@ -13,6 +15,7 @@ export const store = new Store<Esquema>({
   defaults: {
     installId: randomUUID(),
     sessao: {},
+    ultimaVersaoVista: null,
     iniciarComWindows: false,
     notificacoes: true,
     pastaBravos: null,
