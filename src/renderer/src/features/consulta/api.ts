@@ -1,4 +1,5 @@
 import type { StatusDemanda } from '@shared/tipos'
+import { FunctionRegion } from '@supabase/supabase-js'
 import { supabase } from '@renderer/lib/supabase'
 
 /** Resposta enxuta da Edge Function consulta-publica (RN10). */
@@ -27,7 +28,8 @@ export async function consultarPlaca(placa: string): Promise<RespostaConsulta> {
   installId ??= (await window.esteira.app.info()).installId
   const { data, error, response } = await supabase.functions.invoke<ResultadoConsulta>(
     `consulta-publica?placa=${encodeURIComponent(placa)}`,
-    { method: 'GET', headers: { 'x-install-id': installId } }
+    // Roda na região do banco (us-east-1): evita idas e voltas entre continentes.
+    { method: 'GET', headers: { 'x-install-id': installId }, region: FunctionRegion.UsEast1 }
   )
   if (!error && data) return { tipo: 'encontrada', resultado: data }
   const status = response?.status

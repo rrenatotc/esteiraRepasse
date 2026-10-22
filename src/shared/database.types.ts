@@ -14,6 +14,30 @@ export type Database = {
   }
   public: {
     Tables: {
+      consulta_publica_log: {
+        Row: {
+          chave_hash: string
+          created_at: string
+          id: number
+          ip_hash: string
+          placa_busca: string
+        }
+        Insert: {
+          chave_hash: string
+          created_at?: string
+          id?: never
+          ip_hash: string
+          placa_busca: string
+        }
+        Update: {
+          chave_hash?: string
+          created_at?: string
+          id?: never
+          ip_hash?: string
+          placa_busca?: string
+        }
+        Relationships: []
+      }
       demanda_eventos: {
         Row: {
           autor_id: string
@@ -477,6 +501,50 @@ export type Database = {
         }
       }
       codigo_demanda: { Args: { p_codigo: number }; Returns: string }
+      consulta_publica: {
+        Args: { p_chave_hash: string; p_ip_hash: string; p_placa: string }
+        Returns: Json
+      }
+      consultar_placa_publica: { Args: { p_placa: string }; Returns: Json }
+      corrigir_venda: {
+        Args: {
+          p_demanda: string
+          p_loja_proposta_id: number
+          p_lojista_id?: string
+          p_lojista_novo?: Json
+          p_observacao?: string
+          p_valor_venda: number
+        }
+        Returns: {
+          codigo: number
+          created_at: string
+          data_emissao_nf: string | null
+          data_emissao_proposta: string | null
+          id: string
+          loja_proposta_id: number
+          lojista_id: string
+          motivo_ultimo: string | null
+          numero_nf: string | null
+          numero_proposta: string | null
+          observacao: string | null
+          placa: string
+          placa_busca: string
+          responsavel_id: string | null
+          status: Database["public"]["Enums"]["status_demanda"]
+          status_desde: string
+          updated_at: string
+          valor_venda: number
+          veiculo_id: string
+          veiculo_snapshot: Json
+          vendedor_id: string
+        }
+        SetofOptions: {
+          from: "*"
+          to: "demandas"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
       estoque_atualizado_em: { Args: never; Returns: string }
       horas_uteis_entre: {
         Args: { p_fim: string; p_inicio: string }
@@ -490,6 +558,10 @@ export type Database = {
       }
       placa_para_mercosul: { Args: { p: string }; Returns: string }
       previa_estoque: { Args: { p_itens: Json }; Returns: Json }
+      registrar_consulta_publica: {
+        Args: { p_chave_hash: string; p_ip_hash: string; p_placa_busca: string }
+        Returns: boolean
+      }
       registrar_venda: {
         Args: {
           p_loja_proposta_id: number

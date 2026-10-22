@@ -13,6 +13,8 @@ import { Fila } from './features/fila/Fila'
 import { Lojas } from './features/lojas/Lojas'
 import { Lojistas } from './features/lojistas/Lojistas'
 import { Usuarios } from './features/usuarios/Usuarios'
+import { CorrigirVenda } from './features/vendas/CorrigirVenda'
+import { MinhasVendas } from './features/vendas/MinhasVendas'
 import { RegistrarVenda } from './features/vendas/RegistrarVenda'
 
 const queryClient = new QueryClient({
@@ -55,7 +57,15 @@ const router = createHashRouter([
             path: 'vendas',
             element: (
               <Protegida papeis={['vendedor', 'repasse']}>
-                <EmConstrucao titulo="Minhas vendas" fase={5} descricao="Suas vendas com status, tempo e pendências no topo." />
+                <MinhasVendas />
+              </Protegida>
+            )
+          },
+          {
+            path: 'vendas/:id/corrigir',
+            element: (
+              <Protegida papeis={['vendedor', 'repasse']}>
+                <CorrigirVenda />
               </Protegida>
             )
           },

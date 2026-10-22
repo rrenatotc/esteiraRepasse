@@ -113,3 +113,55 @@ export async function registrarVenda(v: NovaVenda): Promise<Demanda> {
   if (error) throw error
   return data
 }
+
+export type MinhaVenda = Demanda & {
+  lojista: Pick<Lojista, 'razao_social' | 'documento' | 'tipo'> | null
+  loja: Pick<Loja, 'codigo' | 'nome'> | null
+}
+
+export async function minhasVendas(status: 'todas' | 'abertas' | Demanda['status'], dias: number | null): Promise<MinhaVenda[]> {
+  // A RLS já limita às vendas do próprio vendedor.
+  let q = supabase
+    .from('demandas')
+    .select('*, lojista:lojistas(razao_social, documento, tipo), loja:lojas(codigo, nome)')
+    .order('created_at', { ascending: false })
+    .limit(500)
+  if (status === 'abertas') q = q.not('status', 'in', '(concluida,cancelada)')
+  else if (status !== 'todas') q = q.eq('status', status)
+  if (dias) q = q.gte('created_at', new Date(Date.now() - dias * 86400_000).toISOString())
+  const { data, error } = await q
+  if (error) throw error
+  return data as unknown as MinhaVenda[]
+}
+
+export async function buscarMinhaVenda(id: string): Promise<(MinhaVenda & { lojista: Lojista | null }) | null> {
+  const { data, error } = await supabase
+    .from('demandas')
+    .select('*, lojista:lojistas(*), loja:lojas(codigo, nome)')
+    .eq('id', id)
+    .maybeSingle()
+  if (error) throw error
+  return data as unknown as (MinhaVenda & { lojista: Lojista | null }) | null
+}
+
+export interface Correcao {
+  demanda: string
+  lojaPropostaId: number
+  valor: string
+  observacao: string
+  lojistaId: string | null
+  lojistaNovo: LojistaNovo | null
+}
+
+export async function corrigirVenda(c: Correcao): Promise<Demanda> {
+  const { data, error } = await supabase.rpc('corrigir_venda', {
+    p_demanda: c.demanda,
+    p_loja_proposta_id: c.lojaPropostaId,
+    p_valor_venda: c.valor as unknown as number, // string decimal, sem float (RN04)
+    p_observacao: c.observacao || undefined,
+    p_lojista_id: c.lojistaId ?? undefined,
+    p_lojista_novo: c.lojistaNovo ?? undefined
+  })
+  if (error) throw error
+  return data
+}

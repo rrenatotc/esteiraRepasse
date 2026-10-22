@@ -1,6 +1,8 @@
 import { describe, expect, it } from 'vitest'
 import { cnpjValido as cnpjApp } from '../../src/shared/documento'
 import { cnpjValido as cnpjFuncao } from '../functions/_shared/cnpj'
+import { placaParaMercosul as placaFuncao } from '../functions/_shared/placa'
+import { placaParaMercosul as placaApp } from '../../src/shared/placa'
 import { deBrasilApi, deOpenCnpj } from '../functions/consultar-cnpj/mapear'
 
 describe('CNPJ na Edge Function', () => {
@@ -10,6 +12,12 @@ describe('CNPJ na Edge Function', () => {
       expect(cnpjFuncao(doc)).toBe(cnpjApp(doc))
     }
   )
+})
+
+describe('placa na Edge Function', () => {
+  it.each(['abc-1234', 'ABC1D23', ' qrs 2945 ', 'XYZ', '', 'ABCD123', 'ABC12345'])('mesma conversão do app: %j', (p) => {
+    expect(placaFuncao(p)).toBe(placaApp(p))
+  })
 })
 
 describe('mapeamento das bases públicas', () => {

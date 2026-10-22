@@ -23,13 +23,13 @@ export async function criarBanco(): Promise<PGlite> {
   return db
 }
 
-export type Quem = { uid: string } | 'anon'
+export type Quem = { uid: string } | 'anon' | 'service_role'
 
 /** Roda fn numa transação como anon ou como o usuário autenticado `uid`. */
 export async function como<T>(db: PGlite, quem: Quem, fn: (tx: Transaction) => Promise<T>): Promise<T> {
   return db.transaction(async (tx) => {
-    if (quem === 'anon') {
-      await tx.exec('set local role anon')
+    if (quem === 'anon' || quem === 'service_role') {
+      await tx.exec(`set local role ${quem}`)
     } else {
       await tx.query(`select set_config('request.jwt.claim.sub', $1, true)`, [quem.uid])
       await tx.exec('set local role authenticated')

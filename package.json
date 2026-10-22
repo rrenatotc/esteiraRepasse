@@ -22,7 +22,8 @@
     "test:watch": "vitest",
     "db:push": "supabase db push --include-seed",
     "db:test": "supabase test db --linked",
-    "db:types": "supabase gen types typescript --linked --schema public > src/shared/database.types.ts"
+    "db:types": "supabase gen types typescript --linked --schema public > src/shared/database.types.ts",
+    "e2e": "electron-vite build && playwright test"
   },
   "dependencies": {
     "@electron-toolkit/utils": "^4.0.0",
@@ -49,6 +50,7 @@
     "@electron-toolkit/eslint-config-prettier": "^3.0.1",
     "@electron-toolkit/eslint-config-ts": "^4.0.0",
     "@electron-toolkit/tsconfig": "^2.0.0",
+    "@playwright/test": "^1.64.1",
     "@tailwindcss/vite": "^4.3.3",
     "@types/node": "^24.19.2",
     "@types/react": "^19.3.0",

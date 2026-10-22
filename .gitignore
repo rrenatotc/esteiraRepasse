@@ -10,3 +10,5 @@ out
 supabase/.temp
 supabase/.branches
 screenshots/
+test-results/
+playwright-report/
