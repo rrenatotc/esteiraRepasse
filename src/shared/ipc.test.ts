@@ -4,6 +4,7 @@ import {
   contadorSchema,
   configParcialSchema,
   notificacaoSchema,
+  salvarArquivoSchema,
   PayloadInvalidoError,
   urlExternaSchema,
   validarPayload
@@ -49,5 +50,15 @@ describe('validarPayload', () => {
     expect(validarPayload(contadorSchema, { total: 0, icone: null }, 'x').total).toBe(0)
     rejeita(() => validarPayload(contadorSchema, { total: 1, icone: 'file:///C:/x.png' }, 'x'))
     rejeita(() => validarPayload(contadorSchema, { total: -1, icone: null }, 'x'))
+  })
+
+  it('salvar arquivo: só nome simples .csv/.xlsx, nada de caminho', () => {
+    expect(validarPayload(salvarArquivoSchema, { nome: 'demandas_2026-10-22_0905.xlsx', base64: 'UEsDBA==' }, 'x').nome).toBe(
+      'demandas_2026-10-22_0905.xlsx'
+    )
+    rejeita(() => validarPayload(salvarArquivoSchema, { nome: String.raw`..\..\Windows\x.csv`, base64: '' }, 'x'))
+    rejeita(() => validarPayload(salvarArquivoSchema, { nome: 'C:/x.csv', base64: '' }, 'x'))
+    rejeita(() => validarPayload(salvarArquivoSchema, { nome: 'virus.exe', base64: '' }, 'x'))
+    rejeita(() => validarPayload(salvarArquivoSchema, { nome: 'a.csv', base64: 'não é base64' }, 'x'))
   })
 })

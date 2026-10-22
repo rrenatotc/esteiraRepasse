@@ -2,7 +2,7 @@
 import { contextBridge, ipcRenderer, type IpcRendererEvent } from 'electron'
 import { CANAIS } from '../shared/canais'
 import type { LeituraEstoque, StatusObservacao } from '../shared/estoque'
-import type { AppInfo, Config, Contador, Notificacao } from '../shared/ipc'
+import type { AppInfo, Config, Contador, Notificacao, SalvarArquivo } from '../shared/ipc'
 
 const api = {
   sessao: {
@@ -34,6 +34,10 @@ const api = {
       ipcRenderer.on(CANAIS.eventoEstoqueNovoArquivo, ouvinte)
       return () => ipcRenderer.off(CANAIS.eventoEstoqueNovoArquivo, ouvinte)
     }
+  },
+  arquivo: {
+    /** Abre "Salvar como" e grava; devolve o caminho ou null se cancelado. */
+    salvar: (a: SalvarArquivo): Promise<string | null> => ipcRenderer.invoke(CANAIS.arquivoSalvar, a)
   },
   config: {
     ler: (): Promise<Config> => ipcRenderer.invoke(CANAIS.configLer),

@@ -9,6 +9,7 @@ import { filtrarDemandas, ORDEM_STATUS } from '@shared/fila'
 import { formatarBRL } from '@shared/moeda'
 import { CODIGO_DEMANDA, type StatusDemanda } from '@shared/tipos'
 import { useAuth } from '@renderer/app/auth'
+import { BotoesExportar } from '@renderer/components/Exportar'
 import { Placa } from '@renderer/components/Placa'
 import { COR_TRILHO, ROTULO_STATUS } from '@renderer/components/Status'
 import { Input } from '@renderer/components/ui/campo'
@@ -17,6 +18,7 @@ import { listarLojas } from '@renderer/features/vendas/api'
 import { mensagemErro } from '@renderer/lib/erros'
 import { cn } from '@renderer/lib/utils'
 import { avancarStatus, FILTROS_PADRAO, listarFila, listarVendedores, snapshot, type DemandaFila, type Filtros } from './api'
+import { COLUNAS_DEMANDAS } from './colunas'
 import { Detalhe, type Acao, type PedidoAvanco } from './Detalhe'
 import { estaParado, tempoParado, useAgora } from './tempo'
 
@@ -158,7 +160,10 @@ export function Fila(): React.JSX.Element {
             <span className="numeros text-[13px] text-grafite">
               {visiveis.length} {visiveis.length === 1 ? 'demanda' : 'demandas'}
             </span>
-            <button onClick={() => setAjuda((a) => !a)} className="ml-auto text-[13px] text-grafite hover:text-tinta" aria-expanded={ajuda}>
+            <span className="ml-auto">
+              <BotoesExportar base="demandas" colunas={COLUNAS_DEMANDAS} linhas={ordenadas} />
+            </span>
+            <button onClick={() => setAjuda((a) => !a)} className="text-[13px] text-grafite hover:text-tinta" aria-expanded={ajuda}>
               Atalhos ( ? )
             </button>
           </div>

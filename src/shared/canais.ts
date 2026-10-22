@@ -16,5 +16,6 @@ export const CANAIS = {
   estoqueEscolherPasta: 'estoque:escolher-pasta',
   estoqueLerMaisRecente: 'estoque:ler-mais-recente',
   estoqueUltimaLeitura: 'estoque:ultima-leitura',
-  eventoEstoqueNovoArquivo: 'evento:estoque-novo-arquivo'
+  eventoEstoqueNovoArquivo: 'evento:estoque-novo-arquivo',
+  arquivoSalvar: 'arquivo:salvar'
 } as const

@@ -35,6 +35,7 @@ export const NAVEGACAO: Record<PapelUsuario, ItemNav[]> = {
     { rota: '/app/lojistas', rotulo: 'Lojistas', icone: Building2 },
     { rota: '/app/usuarios', rotulo: 'Usuários', icone: Users },
     { rota: '/app/lojas', rotulo: 'Lojas', icone: Store },
+    { rota: '/app/painel', rotulo: 'Painel', icone: BarChart3 },
     CONSULTAR,
     CONFIGURACOES
   ],

@@ -21,6 +21,13 @@ export type Notificacao = z.infer<typeof notificacaoSchema>
 
 export const booleanoSchema = z.boolean()
 
+/** Exportação: o renderer gera o conteúdo, o main pergunta onde salvar. */
+export const salvarArquivoSchema = z.object({
+  nome: z.string().regex(/^[\w .()-]{1,120}\.(csv|xlsx)$/),
+  base64: z.string().max(40_000_000).regex(/^[A-Za-z0-9+/=]*$/)
+})
+export type SalvarArquivo = z.infer<typeof salvarArquivoSchema>
+
 export const contadorSchema = z.object({
   total: z.number().int().min(0).max(9999),
   /** Selo para a barra de tarefas, desenhado no renderer (PNG em data URL). */

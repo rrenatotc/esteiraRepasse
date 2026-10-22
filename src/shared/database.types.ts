@@ -550,6 +550,10 @@ export type Database = {
         Args: { p_fim: string; p_inicio: string }
         Returns: number
       }
+      indicadores_painel: {
+        Args: { p_fim: string; p_inicio: string }
+        Returns: Json
+      }
       normalizar_documento: { Args: { p: string }; Returns: string }
       normalizar_placa: { Args: { p: string }; Returns: string }
       papel_atual: {

@@ -23,15 +23,3 @@ export function Pagina({
     </div>
   )
 }
-
-export function EmConstrucao({ titulo, fase, descricao }: { titulo: string; fase: number; descricao: string }): React.JSX.Element {
-  return (
-    <Pagina titulo={titulo}>
-      <div className="max-w-xl border-l-2 border-linha pl-4 text-grafite">
-        <p>
-          Esta tela chega na fase {fase}. {descricao}
-        </p>
-      </div>
-    </Pagina>
-  )
-}

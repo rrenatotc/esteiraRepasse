@@ -93,3 +93,18 @@ export async function contarNovas(): Promise<number> {
   if (error) throw error
   return count ?? 0
 }
+
+/** Demandas registradas no período (datas locais, inclusive), para exportação do painel. */
+export async function listarPeriodo(inicio: Date, fim: Date): Promise<DemandaFila[]> {
+  const ate = new Date(fim)
+  ate.setDate(ate.getDate() + 1)
+  const { data, error } = await supabase
+    .from('demandas')
+    .select(SELECT_FILA)
+    .gte('created_at', inicio.toISOString())
+    .lt('created_at', ate.toISOString())
+    .order('created_at')
+    .limit(5000)
+  if (error) throw error
+  return data as unknown as DemandaFila[]
+}

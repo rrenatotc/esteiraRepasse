@@ -4,13 +4,13 @@ import { createHashRouter, Outlet, RouterProvider, useNavigate } from 'react-rou
 import { AuthProvider } from './app/auth'
 import { Layout } from './app/Layout'
 import { IrParaInicio, Protegida } from './app/Protegida'
-import { EmConstrucao } from './components/Pagina'
 import { Entrar } from './features/auth/Entrar'
 import { Configuracoes } from './features/configuracoes/Configuracoes'
 import { ConsultaPublica } from './features/consulta/ConsultaPublica'
 import { Estoque } from './features/estoque/Estoque'
 import { Fila } from './features/fila/Fila'
 import { Lojas } from './features/lojas/Lojas'
+import { Painel } from './features/painel/Painel'
 import { Lojistas } from './features/lojistas/Lojistas'
 import { Usuarios } from './features/usuarios/Usuarios'
 import { CorrigirVenda } from './features/vendas/CorrigirVenda'
@@ -113,7 +113,7 @@ const router = createHashRouter([
             path: 'painel',
             element: (
               <Protegida papeis={['gestor', 'repasse']}>
-                <EmConstrucao titulo="Painel" fase={6} descricao="Vendas e faturamento por loja, funil por status, tempo médio e exportação." />
+                <Painel />
               </Protegida>
             )
           }

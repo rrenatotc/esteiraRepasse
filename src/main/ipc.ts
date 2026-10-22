@@ -1,6 +1,8 @@
 // Handlers de IPC. Todo payload vindo do renderer é validado com Zod e só
 // aceito se vier do frame principal da nossa janela.
-import { app, ipcMain, shell, type IpcMainInvokeEvent } from 'electron'
+import { app, dialog, ipcMain, shell, type IpcMainInvokeEvent } from 'electron'
+import { writeFile } from 'node:fs/promises'
+import { join } from 'node:path'
 import log from 'electron-log/main'
 import type { ZodType } from 'zod'
 import {
@@ -10,6 +12,7 @@ import {
   booleanoSchema,
   contadorSchema,
   notificacaoSchema,
+  salvarArquivoSchema,
   urlExternaSchema,
   valorSessaoSchema,
   validarPayload,
@@ -76,6 +79,22 @@ export function registrarIpc(): void {
   tratar(CANAIS.estoqueEscolherPasta, () => estoque.escolherPasta())
   tratar(CANAIS.estoqueLerMaisRecente, () => estoque.lerMaisRecente())
   tratar(CANAIS.estoqueUltimaLeitura, () => estoque.obterUltimaLeitura())
+
+  tratar(CANAIS.arquivoSalvar, async (payload): Promise<string | null> => {
+    const { nome, base64 } = validar(salvarArquivoSchema, payload, CANAIS.arquivoSalvar)
+    const xlsx = nome.endsWith('.xlsx')
+    const janela = janelaPrincipal()
+    const opcoes: Electron.SaveDialogOptions = {
+      title: 'Salvar exportação',
+      defaultPath: join(app.getPath('downloads'), nome),
+      filters: [xlsx ? { name: 'Planilha do Excel', extensions: ['xlsx'] } : { name: 'CSV', extensions: ['csv'] }]
+    }
+    const { canceled, filePath } = janela ? await dialog.showSaveDialog(janela, opcoes) : await dialog.showSaveDialog(opcoes)
+    if (canceled || !filePath) return null
+    await writeFile(filePath, Buffer.from(base64, 'base64'))
+    log.info(`Exportação salva em ${filePath}`)
+    return filePath
+  })
 
   tratar(CANAIS.configLer, (): Config => lerConfig())
   tratar(CANAIS.configSalvar, (parcial): Config => {
