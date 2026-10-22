@@ -1,240 +1,647 @@
-// PROVISÓRIO: escrito à mão no formato do `supabase gen types typescript`,
-// espelhando as migrations da fase 1. Será sobrescrito por `npm run db:types`
-// assim que o projeto Supabase estiver ligado. Não edite apelidos aqui; use
-// src/shared/tipos.ts.
-
-export type Json = string | number | boolean | null | { [key: string]: Json | undefined } | Json[]
+export type Json =
+  | string
+  | number
+  | boolean
+  | null
+  | { [key: string]: Json | undefined }
+  | Json[]
 
 export type Database = {
+  // Allows to automatically instantiate createClient with right options
+  // instead of createClient<Database, { PostgrestVersion: 'XX' }>(URL, KEY)
+  __InternalSupabase: {
+    PostgrestVersion: "14.18"
+  }
   public: {
     Tables: {
-      lojas: {
-        Row: { id: number; codigo: string; nome: string; ativa: boolean; created_at: string }
-        Insert: { codigo: string; nome: string; ativa?: boolean }
-        Update: { codigo?: string; nome?: string; ativa?: boolean }
-        Relationships: []
-      }
-      perfis: {
+      demanda_eventos: {
         Row: {
-          id: string
-          nome: string
-          email: string | null
-          papel: Database['public']['Enums']['papel_usuario']
-          loja_id: number | null
-          ativo: boolean
-          created_at: string
-          updated_at: string
-        }
-        Insert: never
-        Update: {
-          nome?: string
-          papel?: Database['public']['Enums']['papel_usuario']
-          loja_id?: number | null
-          ativo?: boolean
-        }
-        Relationships: [
-          { foreignKeyName: 'perfis_loja_id_fkey'; columns: ['loja_id']; isOneToOne: false; referencedRelation: 'lojas'; referencedColumns: ['id'] }
-        ]
-      }
-      lojistas: {
-        Row: {
-          id: string
-          tipo: Database['public']['Enums']['tipo_documento']
-          documento: string
-          razao_social: string
-          nome_fantasia: string | null
-          telefone: string | null
-          email: string | null
-          cidade: string | null
-          uf: string | null
-          situacao_cadastral: string | null
-          origem: string
-          created_by: string | null
-          created_at: string
-          updated_at: string
-        }
-        Insert: {
-          tipo: Database['public']['Enums']['tipo_documento']
-          documento: string
-          razao_social: string
-          nome_fantasia?: string | null
-          telefone?: string | null
-          email?: string | null
-          cidade?: string | null
-          uf?: string | null
-          situacao_cadastral?: string | null
-          origem?: string
-        }
-        Update: {
-          razao_social?: string
-          nome_fantasia?: string | null
-          telefone?: string | null
-          email?: string | null
-          cidade?: string | null
-          uf?: string | null
-          situacao_cadastral?: string | null
-          origem?: string
-        }
-        Relationships: []
-      }
-      veiculos: {
-        Row: {
-          id: string
-          placa: string
-          placa_busca: string
-          chassi: string | null
-          marca: string
-          modelo: string
-          versao: string | null
-          ano_fabricacao: number | null
-          ano_modelo: number | null
-          cor: string | null
-          km: number | null
-          filial_estoque: string | null
-          dados_bravos: Json | null
-          em_estoque: boolean
-          saiu_do_estoque_em: string | null
-          ultima_importacao_id: number | null
-          origem: string
-          created_by: string | null
-          created_at: string
-          updated_at: string
-        }
-        Insert: {
-          placa: string
-          marca: string
-          modelo: string
-          chassi?: string | null
-          versao?: string | null
-          ano_fabricacao?: number | null
-          ano_modelo?: number | null
-          cor?: string | null
-          km?: number | null
-        }
-        Update: {
-          placa?: string
-          chassi?: string | null
-          marca?: string
-          modelo?: string
-          versao?: string | null
-          ano_fabricacao?: number | null
-          ano_modelo?: number | null
-          cor?: string | null
-          km?: number | null
-          filial_estoque?: string | null
-        }
-        Relationships: []
-      }
-      importacoes_estoque: {
-        Row: {
-          id: number
-          arquivo: string
-          arquivo_modificado_em: string | null
-          total_linhas: number
-          novos: number
-          atualizados: number
-          mantidos: number
-          sairam: number
-          erros: number
-          forcado: boolean
           autor_id: string
+          comentario: string | null
           created_at: string
+          de_status: Database["public"]["Enums"]["status_demanda"] | null
+          demanda_id: string
+          id: number
+          para_status: Database["public"]["Enums"]["status_demanda"]
         }
-        Insert: never
-        Update: never
+        Insert: {
+          autor_id: string
+          comentario?: string | null
+          created_at?: string
+          de_status?: Database["public"]["Enums"]["status_demanda"] | null
+          demanda_id: string
+          id?: never
+          para_status: Database["public"]["Enums"]["status_demanda"]
+        }
+        Update: {
+          autor_id?: string
+          comentario?: string | null
+          created_at?: string
+          de_status?: Database["public"]["Enums"]["status_demanda"] | null
+          demanda_id?: string
+          id?: never
+          para_status?: Database["public"]["Enums"]["status_demanda"]
+        }
         Relationships: [
-          { foreignKeyName: 'importacoes_estoque_autor_id_fkey'; columns: ['autor_id']; isOneToOne: false; referencedRelation: 'perfis'; referencedColumns: ['id'] }
+          {
+            foreignKeyName: "demanda_eventos_autor_id_fkey"
+            columns: ["autor_id"]
+            isOneToOne: false
+            referencedRelation: "perfis"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "demanda_eventos_demanda_id_fkey"
+            columns: ["demanda_id"]
+            isOneToOne: false
+            referencedRelation: "demandas"
+            referencedColumns: ["id"]
+          },
         ]
       }
       demandas: {
         Row: {
-          id: string
           codigo: number
-          veiculo_id: string
+          created_at: string
+          data_emissao_nf: string | null
+          data_emissao_proposta: string | null
+          id: string
+          loja_proposta_id: number
+          lojista_id: string
+          motivo_ultimo: string | null
+          numero_nf: string | null
+          numero_proposta: string | null
+          observacao: string | null
           placa: string
           placa_busca: string
-          veiculo_snapshot: Json
-          lojista_id: string
-          loja_proposta_id: number
-          vendedor_id: string
           responsavel_id: string | null
+          status: Database["public"]["Enums"]["status_demanda"]
+          updated_at: string
           valor_venda: number
-          observacao: string | null
-          numero_proposta: string | null
-          data_emissao_proposta: string | null
-          numero_nf: string | null
-          data_emissao_nf: string | null
-          status: Database['public']['Enums']['status_demanda']
-          motivo_ultimo: string | null
+          veiculo_id: string
+          veiculo_snapshot: Json
+          vendedor_id: string
+        }
+        Insert: {
+          codigo?: never
+          created_at?: string
+          data_emissao_nf?: string | null
+          data_emissao_proposta?: string | null
+          id?: string
+          loja_proposta_id: number
+          lojista_id: string
+          motivo_ultimo?: string | null
+          numero_nf?: string | null
+          numero_proposta?: string | null
+          observacao?: string | null
+          placa: string
+          placa_busca: string
+          responsavel_id?: string | null
+          status?: Database["public"]["Enums"]["status_demanda"]
+          updated_at?: string
+          valor_venda: number
+          veiculo_id: string
+          veiculo_snapshot: Json
+          vendedor_id?: string
+        }
+        Update: {
+          codigo?: never
+          created_at?: string
+          data_emissao_nf?: string | null
+          data_emissao_proposta?: string | null
+          id?: string
+          loja_proposta_id?: number
+          lojista_id?: string
+          motivo_ultimo?: string | null
+          numero_nf?: string | null
+          numero_proposta?: string | null
+          observacao?: string | null
+          placa?: string
+          placa_busca?: string
+          responsavel_id?: string | null
+          status?: Database["public"]["Enums"]["status_demanda"]
+          updated_at?: string
+          valor_venda?: number
+          veiculo_id?: string
+          veiculo_snapshot?: Json
+          vendedor_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "demandas_loja_proposta_id_fkey"
+            columns: ["loja_proposta_id"]
+            isOneToOne: false
+            referencedRelation: "lojas"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "demandas_lojista_id_fkey"
+            columns: ["lojista_id"]
+            isOneToOne: false
+            referencedRelation: "lojistas"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "demandas_responsavel_id_fkey"
+            columns: ["responsavel_id"]
+            isOneToOne: false
+            referencedRelation: "perfis"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "demandas_veiculo_id_fkey"
+            columns: ["veiculo_id"]
+            isOneToOne: false
+            referencedRelation: "veiculos"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "demandas_vendedor_id_fkey"
+            columns: ["vendedor_id"]
+            isOneToOne: false
+            referencedRelation: "perfis"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      importacoes_estoque: {
+        Row: {
+          arquivo: string
+          arquivo_modificado_em: string | null
+          atualizados: number
+          autor_id: string
           created_at: string
+          erros: number
+          forcado: boolean
+          id: number
+          mantidos: number
+          novos: number
+          sairam: number
+          total_linhas: number
+        }
+        Insert: {
+          arquivo: string
+          arquivo_modificado_em?: string | null
+          atualizados?: number
+          autor_id: string
+          created_at?: string
+          erros?: number
+          forcado?: boolean
+          id?: never
+          mantidos?: number
+          novos?: number
+          sairam?: number
+          total_linhas?: number
+        }
+        Update: {
+          arquivo?: string
+          arquivo_modificado_em?: string | null
+          atualizados?: number
+          autor_id?: string
+          created_at?: string
+          erros?: number
+          forcado?: boolean
+          id?: never
+          mantidos?: number
+          novos?: number
+          sairam?: number
+          total_linhas?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "importacoes_estoque_autor_id_fkey"
+            columns: ["autor_id"]
+            isOneToOne: false
+            referencedRelation: "perfis"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      lojas: {
+        Row: {
+          ativa: boolean
+          codigo: string
+          created_at: string
+          id: number
+          nome: string
+        }
+        Insert: {
+          ativa?: boolean
+          codigo: string
+          created_at?: string
+          id?: never
+          nome: string
+        }
+        Update: {
+          ativa?: boolean
+          codigo?: string
+          created_at?: string
+          id?: never
+          nome?: string
+        }
+        Relationships: []
+      }
+      lojistas: {
+        Row: {
+          cidade: string | null
+          created_at: string
+          created_by: string | null
+          documento: string
+          email: string | null
+          id: string
+          nome_fantasia: string | null
+          origem: string
+          razao_social: string
+          situacao_cadastral: string | null
+          telefone: string | null
+          tipo: Database["public"]["Enums"]["tipo_documento"]
+          uf: string | null
           updated_at: string
         }
         Insert: {
-          veiculo_id: string
-          lojista_id: string
-          loja_proposta_id: number
-          valor_venda: number | string
-          observacao?: string | null
+          cidade?: string | null
+          created_at?: string
+          created_by?: string | null
+          documento: string
+          email?: string | null
+          id?: string
+          nome_fantasia?: string | null
+          origem?: string
+          razao_social: string
+          situacao_cadastral?: string | null
+          telefone?: string | null
+          tipo: Database["public"]["Enums"]["tipo_documento"]
+          uf?: string | null
+          updated_at?: string
         }
         Update: {
-          veiculo_id?: string
-          lojista_id?: string
-          loja_proposta_id?: number
-          valor_venda?: number | string
-          observacao?: string | null
+          cidade?: string | null
+          created_at?: string
+          created_by?: string | null
+          documento?: string
+          email?: string | null
+          id?: string
+          nome_fantasia?: string | null
+          origem?: string
+          razao_social?: string
+          situacao_cadastral?: string | null
+          telefone?: string | null
+          tipo?: Database["public"]["Enums"]["tipo_documento"]
+          uf?: string | null
+          updated_at?: string
         }
         Relationships: [
-          { foreignKeyName: 'demandas_veiculo_id_fkey'; columns: ['veiculo_id']; isOneToOne: false; referencedRelation: 'veiculos'; referencedColumns: ['id'] },
-          { foreignKeyName: 'demandas_lojista_id_fkey'; columns: ['lojista_id']; isOneToOne: false; referencedRelation: 'lojistas'; referencedColumns: ['id'] },
-          { foreignKeyName: 'demandas_loja_proposta_id_fkey'; columns: ['loja_proposta_id']; isOneToOne: false; referencedRelation: 'lojas'; referencedColumns: ['id'] },
-          { foreignKeyName: 'demandas_vendedor_id_fkey'; columns: ['vendedor_id']; isOneToOne: false; referencedRelation: 'perfis'; referencedColumns: ['id'] },
-          { foreignKeyName: 'demandas_responsavel_id_fkey'; columns: ['responsavel_id']; isOneToOne: false; referencedRelation: 'perfis'; referencedColumns: ['id'] }
+          {
+            foreignKeyName: "lojistas_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "perfis"
+            referencedColumns: ["id"]
+          },
         ]
       }
-      demanda_eventos: {
+      perfis: {
         Row: {
-          id: number
-          demanda_id: string
-          de_status: Database['public']['Enums']['status_demanda'] | null
-          para_status: Database['public']['Enums']['status_demanda']
-          autor_id: string
-          comentario: string | null
+          ativo: boolean
           created_at: string
+          email: string | null
+          id: string
+          loja_id: number | null
+          nome: string
+          papel: Database["public"]["Enums"]["papel_usuario"]
+          updated_at: string
         }
-        Insert: never
-        Update: never
+        Insert: {
+          ativo?: boolean
+          created_at?: string
+          email?: string | null
+          id: string
+          loja_id?: number | null
+          nome: string
+          papel?: Database["public"]["Enums"]["papel_usuario"]
+          updated_at?: string
+        }
+        Update: {
+          ativo?: boolean
+          created_at?: string
+          email?: string | null
+          id?: string
+          loja_id?: number | null
+          nome?: string
+          papel?: Database["public"]["Enums"]["papel_usuario"]
+          updated_at?: string
+        }
         Relationships: [
-          { foreignKeyName: 'demanda_eventos_demanda_id_fkey'; columns: ['demanda_id']; isOneToOne: false; referencedRelation: 'demandas'; referencedColumns: ['id'] },
-          { foreignKeyName: 'demanda_eventos_autor_id_fkey'; columns: ['autor_id']; isOneToOne: false; referencedRelation: 'perfis'; referencedColumns: ['id'] }
+          {
+            foreignKeyName: "perfis_loja_id_fkey"
+            columns: ["loja_id"]
+            isOneToOne: false
+            referencedRelation: "lojas"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      veiculos: {
+        Row: {
+          ano_fabricacao: number | null
+          ano_modelo: number | null
+          chassi: string | null
+          cor: string | null
+          created_at: string
+          created_by: string | null
+          dados_bravos: Json | null
+          em_estoque: boolean
+          filial_estoque: string | null
+          id: string
+          km: number | null
+          marca: string
+          modelo: string
+          origem: string
+          placa: string
+          placa_busca: string
+          saiu_do_estoque_em: string | null
+          ultima_importacao_id: number | null
+          updated_at: string
+          versao: string | null
+        }
+        Insert: {
+          ano_fabricacao?: number | null
+          ano_modelo?: number | null
+          chassi?: string | null
+          cor?: string | null
+          created_at?: string
+          created_by?: string | null
+          dados_bravos?: Json | null
+          em_estoque?: boolean
+          filial_estoque?: string | null
+          id?: string
+          km?: number | null
+          marca: string
+          modelo: string
+          origem?: string
+          placa: string
+          placa_busca: string
+          saiu_do_estoque_em?: string | null
+          ultima_importacao_id?: number | null
+          updated_at?: string
+          versao?: string | null
+        }
+        Update: {
+          ano_fabricacao?: number | null
+          ano_modelo?: number | null
+          chassi?: string | null
+          cor?: string | null
+          created_at?: string
+          created_by?: string | null
+          dados_bravos?: Json | null
+          em_estoque?: boolean
+          filial_estoque?: string | null
+          id?: string
+          km?: number | null
+          marca?: string
+          modelo?: string
+          origem?: string
+          placa?: string
+          placa_busca?: string
+          saiu_do_estoque_em?: string | null
+          ultima_importacao_id?: number | null
+          updated_at?: string
+          versao?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "veiculos_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "perfis"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "veiculos_ultima_importacao_id_fkey"
+            columns: ["ultima_importacao_id"]
+            isOneToOne: false
+            referencedRelation: "importacoes_estoque"
+            referencedColumns: ["id"]
+          },
         ]
       }
     }
-    Views: { [_ in never]: never }
+    Views: {
+      [_ in never]: never
+    }
     Functions: {
       avancar_status: {
         Args: {
-          p_demanda: string
-          p_para: Database['public']['Enums']['status_demanda']
+          p_comentario?: string
           p_dados?: Json
-          p_comentario?: string | null
+          p_demanda: string
+          p_para: Database["public"]["Enums"]["status_demanda"]
         }
-        Returns: Database['public']['Tables']['demandas']['Row']
+        Returns: {
+          codigo: number
+          created_at: string
+          data_emissao_nf: string | null
+          data_emissao_proposta: string | null
+          id: string
+          loja_proposta_id: number
+          lojista_id: string
+          motivo_ultimo: string | null
+          numero_nf: string | null
+          numero_proposta: string | null
+          observacao: string | null
+          placa: string
+          placa_busca: string
+          responsavel_id: string | null
+          status: Database["public"]["Enums"]["status_demanda"]
+          updated_at: string
+          valor_venda: number
+          veiculo_id: string
+          veiculo_snapshot: Json
+          vendedor_id: string
+        }
+        SetofOptions: {
+          from: "*"
+          to: "demandas"
+          isOneToOne: true
+          isSetofReturn: false
+        }
       }
+      codigo_demanda: { Args: { p_codigo: number }; Returns: string }
+      horas_uteis_entre: {
+        Args: { p_fim: string; p_inicio: string }
+        Returns: number
+      }
+      normalizar_documento: { Args: { p: string }; Returns: string }
+      normalizar_placa: { Args: { p: string }; Returns: string }
+      papel_atual: {
+        Args: never
+        Returns: Database["public"]["Enums"]["papel_usuario"]
+      }
+      placa_para_mercosul: { Args: { p: string }; Returns: string }
+      rotulo_status: {
+        Args: { p: Database["public"]["Enums"]["status_demanda"] }
+        Returns: string
+      }
+      validar_cnpj: { Args: { p: string }; Returns: boolean }
+      validar_cpf: { Args: { p: string }; Returns: boolean }
       verificar_placa_aberta: {
         Args: { p_placa: string }
         Returns: {
           codigo: string
-          status: Database['public']['Enums']['status_demanda']
+          status: Database["public"]["Enums"]["status_demanda"]
           status_rotulo: string
         }[]
       }
-      papel_atual: { Args: Record<PropertyKey, never>; Returns: Database['public']['Enums']['papel_usuario'] | null }
     }
     Enums: {
-      papel_usuario: 'vendedor' | 'repasse' | 'gestor'
-      status_demanda: 'nova' | 'em_proposta' | 'proposta_emitida' | 'faturada' | 'concluida' | 'pendente' | 'cancelada'
-      tipo_documento: 'cpf' | 'cnpj'
+      papel_usuario: "vendedor" | "repasse" | "gestor"
+      status_demanda:
+        | "nova"
+        | "em_proposta"
+        | "proposta_emitida"
+        | "faturada"
+        | "concluida"
+        | "pendente"
+        | "cancelada"
+      tipo_documento: "cpf" | "cnpj"
     }
-    CompositeTypes: { [_ in never]: never }
+    CompositeTypes: {
+      [_ in never]: never
+    }
   }
 }
+
+type DatabaseWithoutInternals = Omit<Database, "__InternalSupabase">
+
+type DefaultSchema = DatabaseWithoutInternals[Extract<keyof Database, "public">]
+
+export type Tables<
+  DefaultSchemaTableNameOrOptions extends
+    | keyof (DefaultSchema["Tables"] & DefaultSchema["Views"])
+    | { schema: keyof DatabaseWithoutInternals },
+  TableName extends (DefaultSchemaTableNameOrOptions extends {
+    schema: keyof DatabaseWithoutInternals
+  }
+    ? keyof (DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"] &
+        DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Views"])
+    : never) = never,
+> = DefaultSchemaTableNameOrOptions extends {
+  schema: keyof DatabaseWithoutInternals
+}
+  ? (DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"] &
+      DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Views"])[TableName] extends {
+      Row: infer R
+    }
+    ? R
+    : never
+  : DefaultSchemaTableNameOrOptions extends keyof (DefaultSchema["Tables"] &
+        DefaultSchema["Views"])
+    ? (DefaultSchema["Tables"] &
+        DefaultSchema["Views"])[DefaultSchemaTableNameOrOptions] extends {
+        Row: infer R
+      }
+      ? R
+      : never
+    : never
+
+export type TablesInsert<
+  DefaultSchemaTableNameOrOptions extends
+    | keyof DefaultSchema["Tables"]
+    | { schema: keyof DatabaseWithoutInternals },
+  TableName extends (DefaultSchemaTableNameOrOptions extends {
+    schema: keyof DatabaseWithoutInternals
+  }
+    ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"]
+    : never) = never,
+> = DefaultSchemaTableNameOrOptions extends {
+  schema: keyof DatabaseWithoutInternals
+}
+  ? DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"][TableName] extends {
+      Insert: infer I
+    }
+    ? I
+    : never
+  : DefaultSchemaTableNameOrOptions extends keyof DefaultSchema["Tables"]
+    ? DefaultSchema["Tables"][DefaultSchemaTableNameOrOptions] extends {
+        Insert: infer I
+      }
+      ? I
+      : never
+    : never
+
+export type TablesUpdate<
+  DefaultSchemaTableNameOrOptions extends
+    | keyof DefaultSchema["Tables"]
+    | { schema: keyof DatabaseWithoutInternals },
+  TableName extends (DefaultSchemaTableNameOrOptions extends {
+    schema: keyof DatabaseWithoutInternals
+  }
+    ? keyof DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"]
+    : never) = never,
+> = DefaultSchemaTableNameOrOptions extends {
+  schema: keyof DatabaseWithoutInternals
+}
+  ? DatabaseWithoutInternals[DefaultSchemaTableNameOrOptions["schema"]]["Tables"][TableName] extends {
+      Update: infer U
+    }
+    ? U
+    : never
+  : DefaultSchemaTableNameOrOptions extends keyof DefaultSchema["Tables"]
+    ? DefaultSchema["Tables"][DefaultSchemaTableNameOrOptions] extends {
+        Update: infer U
+      }
+      ? U
+      : never
+    : never
+
+export type Enums<
+  DefaultSchemaEnumNameOrOptions extends
+    | keyof DefaultSchema["Enums"]
+    | { schema: keyof DatabaseWithoutInternals },
+  EnumName extends (DefaultSchemaEnumNameOrOptions extends {
+    schema: keyof DatabaseWithoutInternals
+  }
+    ? keyof DatabaseWithoutInternals[DefaultSchemaEnumNameOrOptions["schema"]]["Enums"]
+    : never) = never,
+> = DefaultSchemaEnumNameOrOptions extends {
+  schema: keyof DatabaseWithoutInternals
+}
+  ? DatabaseWithoutInternals[DefaultSchemaEnumNameOrOptions["schema"]]["Enums"][EnumName]
+  : DefaultSchemaEnumNameOrOptions extends keyof DefaultSchema["Enums"]
+    ? DefaultSchema["Enums"][DefaultSchemaEnumNameOrOptions]
+    : never
+
+export type CompositeTypes<
+  PublicCompositeTypeNameOrOptions extends
+    | keyof DefaultSchema["CompositeTypes"]
+    | { schema: keyof DatabaseWithoutInternals },
+  CompositeTypeName extends (PublicCompositeTypeNameOrOptions extends {
+    schema: keyof DatabaseWithoutInternals
+  }
+    ? keyof DatabaseWithoutInternals[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"]
+    : never) = never,
+> = PublicCompositeTypeNameOrOptions extends {
+  schema: keyof DatabaseWithoutInternals
+}
+  ? DatabaseWithoutInternals[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"][CompositeTypeName]
+  : PublicCompositeTypeNameOrOptions extends keyof DefaultSchema["CompositeTypes"]
+    ? DefaultSchema["CompositeTypes"][PublicCompositeTypeNameOrOptions]
+    : never
+
+export const Constants = {
+  public: {
+    Enums: {
+      papel_usuario: ["vendedor", "repasse", "gestor"],
+      status_demanda: [
+        "nova",
+        "em_proposta",
+        "proposta_emitida",
+        "faturada",
+        "concluida",
+        "pendente",
+        "cancelada",
+      ],
+      tipo_documento: ["cpf", "cnpj"],
+    },
+  },
+} as const
