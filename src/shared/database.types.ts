@@ -346,10 +346,12 @@ export type Database = {
           ano_fabricacao: number | null
           ano_modelo: number | null
           chassi: string | null
+          codigo_bravos: string | null
           cor: string | null
           created_at: string
           created_by: string | null
           dados_bravos: Json | null
+          dias_em_estoque: number | null
           em_estoque: boolean
           filial_estoque: string | null
           id: string
@@ -368,10 +370,12 @@ export type Database = {
           ano_fabricacao?: number | null
           ano_modelo?: number | null
           chassi?: string | null
+          codigo_bravos?: string | null
           cor?: string | null
           created_at?: string
           created_by?: string | null
           dados_bravos?: Json | null
+          dias_em_estoque?: number | null
           em_estoque?: boolean
           filial_estoque?: string | null
           id?: string
@@ -390,10 +394,12 @@ export type Database = {
           ano_fabricacao?: number | null
           ano_modelo?: number | null
           chassi?: string | null
+          codigo_bravos?: string | null
           cor?: string | null
           created_at?: string
           created_by?: string | null
           dados_bravos?: Json | null
+          dias_em_estoque?: number | null
           em_estoque?: boolean
           filial_estoque?: string | null
           id?: string
@@ -467,6 +473,7 @@ export type Database = {
         }
       }
       codigo_demanda: { Args: { p_codigo: number }; Returns: string }
+      estoque_atualizado_em: { Args: never; Returns: string }
       horas_uteis_entre: {
         Args: { p_fim: string; p_inicio: string }
         Returns: number
@@ -478,9 +485,21 @@ export type Database = {
         Returns: Database["public"]["Enums"]["papel_usuario"]
       }
       placa_para_mercosul: { Args: { p: string }; Returns: string }
+      previa_estoque: { Args: { p_itens: Json }; Returns: Json }
       rotulo_status: {
         Args: { p: Database["public"]["Enums"]["status_demanda"] }
         Returns: string
+      }
+      sincronizar_estoque: {
+        Args: {
+          p_arquivo: string
+          p_arquivo_modificado_em: string
+          p_erros?: number
+          p_forcar?: boolean
+          p_itens: Json
+          p_total_linhas?: number
+        }
+        Returns: Json
       }
       validar_cnpj: { Args: { p: string }; Returns: boolean }
       validar_cpf: { Args: { p: string }; Returns: boolean }

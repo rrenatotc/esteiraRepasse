@@ -1,5 +1,7 @@
 import { WifiOff } from 'lucide-react'
 import { NavLink, Outlet } from 'react-router-dom'
+import { BarraEstoque } from '@renderer/features/estoque/BarraEstoque'
+import { useEstoqueRepasse } from '@renderer/features/estoque/useEstoqueRepasse'
 import { useOnline } from '@renderer/hooks/useOnline'
 import { cn } from '@renderer/lib/utils'
 import { useAuth } from './auth'
@@ -20,6 +22,8 @@ export function AvisoSemRede(): React.JSX.Element | null {
 export function Layout(): React.JSX.Element {
   const { perfil } = useAuth()
   const itens = perfil ? NAVEGACAO[perfil.papel] : []
+  const repasse = perfil?.papel === 'repasse'
+  useEstoqueRepasse(repasse)
 
   return (
     <div className="flex h-full">
@@ -50,6 +54,7 @@ export function Layout(): React.JSX.Element {
       </nav>
       <div className="flex min-w-0 flex-1 flex-col">
         <AvisoSemRede />
+        {repasse && <BarraEstoque />}
         <main className="min-h-0 flex-1 overflow-auto">
           <Outlet />
         </main>

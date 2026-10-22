@@ -1,6 +1,7 @@
 // Única ponte entre renderer e main: window.esteira, mínima e tipada.
 import { contextBridge, ipcRenderer, type IpcRendererEvent } from 'electron'
 import { CANAIS } from '../shared/canais'
+import type { LeituraEstoque, StatusObservacao } from '../shared/estoque'
 import type { AppInfo, Config, Notificacao } from '../shared/ipc'
 
 const api = {
@@ -19,6 +20,19 @@ const api = {
       const ouvinte = (_: IpcRendererEvent, rota: string): void => cb(rota)
       ipcRenderer.on(CANAIS.eventoNavegar, ouvinte)
       return () => ipcRenderer.off(CANAIS.eventoNavegar, ouvinte)
+    }
+  },
+  estoque: {
+    status: (): Promise<StatusObservacao> => ipcRenderer.invoke(CANAIS.estoqueStatus),
+    observar: (ativo: boolean): Promise<StatusObservacao> => ipcRenderer.invoke(CANAIS.estoqueObservar, ativo),
+    escolherPasta: (): Promise<{ pasta: string; planilhas: number } | { erro: string } | null> =>
+      ipcRenderer.invoke(CANAIS.estoqueEscolherPasta),
+    lerMaisRecente: (): Promise<LeituraEstoque | null> => ipcRenderer.invoke(CANAIS.estoqueLerMaisRecente),
+    ultimaLeitura: (): Promise<LeituraEstoque | null> => ipcRenderer.invoke(CANAIS.estoqueUltimaLeitura),
+    onNovoArquivo: (cb: (leitura: LeituraEstoque) => void): (() => void) => {
+      const ouvinte = (_: IpcRendererEvent, leitura: LeituraEstoque): void => cb(leitura)
+      ipcRenderer.on(CANAIS.eventoEstoqueNovoArquivo, ouvinte)
+      return () => ipcRenderer.off(CANAIS.eventoEstoqueNovoArquivo, ouvinte)
     }
   },
   config: {

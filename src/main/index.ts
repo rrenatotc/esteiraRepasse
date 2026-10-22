@@ -2,6 +2,7 @@ import { app, BrowserWindow } from 'electron'
 import log from 'electron-log/main'
 import { electronApp, optimizer } from '@electron-toolkit/utils'
 import { criarBandeja } from './bandeja'
+import { encerrar as encerrarEstoque } from './estoque'
 import { registrarIpc } from './ipc'
 import { criarJanela, marcarSaindo, mostrarJanela } from './janela'
 
@@ -32,7 +33,10 @@ if (!app.requestSingleInstanceLock()) {
   })
 
   // Sair pela bandeja, desligamento do Windows ou instalação de update.
-  app.on('before-quit', marcarSaindo)
+  app.on('before-quit', () => {
+    marcarSaindo()
+    void encerrarEstoque()
+  })
 
   // A janela fechada vai para a bandeja; o app só sai pelo menu "Sair".
   app.on('window-all-closed', () => {

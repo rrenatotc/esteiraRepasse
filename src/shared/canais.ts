@@ -10,5 +10,11 @@ export const CANAIS = {
   appAbrirExterno: 'app:abrir-externo',
   configLer: 'config:ler',
   configSalvar: 'config:salvar',
-  eventoNavegar: 'evento:navegar'
+  eventoNavegar: 'evento:navegar',
+  estoqueStatus: 'estoque:status',
+  estoqueObservar: 'estoque:observar',
+  estoqueEscolherPasta: 'estoque:escolher-pasta',
+  estoqueLerMaisRecente: 'estoque:ler-mais-recente',
+  estoqueUltimaLeitura: 'estoque:ultima-leitura',
+  eventoEstoqueNovoArquivo: 'evento:estoque-novo-arquivo'
 } as const

@@ -8,6 +8,7 @@ import { EmConstrucao } from './components/Pagina'
 import { Entrar } from './features/auth/Entrar'
 import { Configuracoes } from './features/configuracoes/Configuracoes'
 import { ConsultaPublica } from './features/consulta/ConsultaPublica'
+import { Estoque } from './features/estoque/Estoque'
 
 const queryClient = new QueryClient({
   defaultOptions: { queries: { retry: 1, refetchOnWindowFocus: false } }
@@ -65,7 +66,7 @@ const router = createHashRouter([
             path: 'estoque',
             element: (
               <Protegida papeis={['repasse']}>
-                <EmConstrucao titulo="Estoque e veículos" fase={2} descricao="Leitura da planilha do Bravos, pré-visualização e histórico de atualizações." />
+                <Estoque />
               </Protegida>
             )
           },

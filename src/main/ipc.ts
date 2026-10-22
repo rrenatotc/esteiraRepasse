@@ -7,6 +7,7 @@ import {
   CANAIS,
   chaveSessaoSchema,
   configParcialSchema,
+  booleanoSchema,
   contadorSchema,
   notificacaoSchema,
   urlExternaSchema,
@@ -17,6 +18,7 @@ import {
   type Config
 } from '../shared/ipc'
 import { atualizarContador } from './bandeja'
+import * as estoque from './estoque'
 import { janelaPrincipal } from './janela'
 import { notificar } from './notificacoes'
 import { lerSessao, removerSessao, salvarSessao } from './sessao'
@@ -68,6 +70,12 @@ export function registrarIpc(): void {
   tratar(CANAIS.appAbrirExterno, (url) =>
     shell.openExternal(validar(urlExternaSchema, url, CANAIS.appAbrirExterno))
   )
+
+  tratar(CANAIS.estoqueStatus, () => estoque.status())
+  tratar(CANAIS.estoqueObservar, (ativo) => estoque.observar(validar(booleanoSchema, ativo, CANAIS.estoqueObservar)))
+  tratar(CANAIS.estoqueEscolherPasta, () => estoque.escolherPasta())
+  tratar(CANAIS.estoqueLerMaisRecente, () => estoque.lerMaisRecente())
+  tratar(CANAIS.estoqueUltimaLeitura, () => estoque.obterUltimaLeitura())
 
   tratar(CANAIS.configLer, (): Config => lerConfig())
   tratar(CANAIS.configSalvar, (parcial): Config => {

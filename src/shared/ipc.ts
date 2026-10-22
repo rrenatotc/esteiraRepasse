@@ -19,6 +19,8 @@ export const notificacaoSchema = z.object({
 })
 export type Notificacao = z.infer<typeof notificacaoSchema>
 
+export const booleanoSchema = z.boolean()
+
 export const contadorSchema = z.number().int().min(0).max(9999)
 
 export const urlExternaSchema = z
