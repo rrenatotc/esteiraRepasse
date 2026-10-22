@@ -50,7 +50,9 @@ export function Previa({ leitura, onDescartar }: { leitura: LeituraEstoque; onDe
   const [forcarConfirmado, setForcarConfirmado] = useState(false)
   const ultima = useQuery({ queryKey: CHAVES.ultima, queryFn: ultimaImportacao })
   const previa = useQuery({
-    queryKey: ['estoque', 'previa', leitura.caminho, leitura.modificadoEm],
+    // Fora do prefixo ['estoque']: depois de aplicar, os números mostrados
+    // continuam sendo os do que foi aplicado, não uma nova comparação.
+    queryKey: ['previa-estoque', leitura.caminho, leitura.modificadoEm],
     queryFn: () => previaEstoque(leitura.itens),
     enabled: leitura.colunasFaltando.length === 0
   })

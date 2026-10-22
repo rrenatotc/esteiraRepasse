@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest'
 import {
   chaveSessaoSchema,
+  contadorSchema,
   configParcialSchema,
   notificacaoSchema,
   PayloadInvalidoError,
@@ -41,5 +42,12 @@ describe('validarPayload', () => {
   it('config parcial rejeita tipo errado', () => {
     rejeita(() => validarPayload(configParcialSchema, { notificacoes: 'sim' }, 'x'))
     expect(validarPayload(configParcialSchema, { notificacoes: false }, 'x')).toEqual({ notificacoes: false })
+  })
+
+  it('contador aceita só PNG em data URL', () => {
+    expect(validarPayload(contadorSchema, { total: 3, icone: 'data:image/png;base64,iVBORw0KGgo=' }, 'x').total).toBe(3)
+    expect(validarPayload(contadorSchema, { total: 0, icone: null }, 'x').total).toBe(0)
+    rejeita(() => validarPayload(contadorSchema, { total: 1, icone: 'file:///C:/x.png' }, 'x'))
+    rejeita(() => validarPayload(contadorSchema, { total: -1, icone: null }, 'x'))
   })
 })

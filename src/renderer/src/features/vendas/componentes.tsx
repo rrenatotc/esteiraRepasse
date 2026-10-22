@@ -1,6 +1,6 @@
 // Peças visuais compartilhadas pelos passos do registro de venda.
 import { AlertTriangle, CheckCircle2, Info } from 'lucide-react'
-import type { ReactNode, SelectHTMLAttributes, TextareaHTMLAttributes } from 'react'
+import { forwardRef, type ReactNode, type SelectHTMLAttributes, type TextareaHTMLAttributes } from 'react'
 import { cn } from '@renderer/lib/utils'
 
 const PASSOS = ['Placa', 'Lojista', 'Valor e loja', 'Revisão']
@@ -71,9 +71,13 @@ export function Selecao({ className, ...props }: SelectHTMLAttributes<HTMLSelect
   )
 }
 
-export function AreaTexto({ className, ...props }: TextareaHTMLAttributes<HTMLTextAreaElement>): React.JSX.Element {
+export const AreaTexto = forwardRef<HTMLTextAreaElement, TextareaHTMLAttributes<HTMLTextAreaElement>>(function AreaTexto(
+  { className, ...props },
+  ref
+) {
   return (
     <textarea
+      ref={ref}
       className={cn(
         'min-h-20 w-full rounded-sm border border-linha bg-superficie px-3 py-2 text-tinta placeholder:text-grafite/70 focus-visible:border-azul-placa focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-azul-placa/25',
         className
@@ -81,7 +85,7 @@ export function AreaTexto({ className, ...props }: TextareaHTMLAttributes<HTMLTe
       {...props}
     />
   )
-}
+})
 
 export function Rodape({ children }: { children: ReactNode }): React.JSX.Element {
   return <div className="mt-8 flex justify-end gap-2 border-t border-linha pt-4">{children}</div>

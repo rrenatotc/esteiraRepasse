@@ -332,3 +332,25 @@ describe('histórico imutável (RN07)', () => {
     )
   })
 })
+
+describe('status_desde (RF13)', () => {
+  it('muda só quando o status muda', async () => {
+    const d = await registrarVenda(vendedorA, 'SDE1A11')
+    const desde = async (): Promise<string> =>
+      (await db.query<{ s: string }>(`select status_desde::text s from public.demandas where id = $1`, [d.id])).rows[0].s
+    await db.query(`update public.demandas set status_desde = now() - interval '2 days' where id = $1`, [d.id])
+    const antigo = await desde()
+    await db.query(`update public.demandas set observacao = 'x' where id = $1`, [d.id])
+    expect(await desde()).toBe(antigo)
+    await como(db, { uid: repasse }, (tx) => avancar(tx, d.id, 'em_proposta'))
+    expect(await desde()).not.toBe(antigo)
+  })
+
+  it('demandas está na publicação do realtime', async () => {
+    const { rows } = await db.query<{ n: number }>(
+      `select count(*)::int n from pg_publication_tables where pubname = 'supabase_realtime' and tablename = 'demandas'`
+    )
+    expect(rows[0].n).toBe(1)
+  })
+})
+

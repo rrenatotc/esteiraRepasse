@@ -76,6 +76,7 @@ export type Database = {
           placa_busca: string
           responsavel_id: string | null
           status: Database["public"]["Enums"]["status_demanda"]
+          status_desde: string
           updated_at: string
           valor_venda: number
           veiculo_id: string
@@ -98,6 +99,7 @@ export type Database = {
           placa_busca: string
           responsavel_id?: string | null
           status?: Database["public"]["Enums"]["status_demanda"]
+          status_desde?: string
           updated_at?: string
           valor_venda: number
           veiculo_id: string
@@ -120,6 +122,7 @@ export type Database = {
           placa_busca?: string
           responsavel_id?: string | null
           status?: Database["public"]["Enums"]["status_demanda"]
+          status_desde?: string
           updated_at?: string
           valor_venda?: number
           veiculo_id?: string
@@ -459,6 +462,7 @@ export type Database = {
           placa_busca: string
           responsavel_id: string | null
           status: Database["public"]["Enums"]["status_demanda"]
+          status_desde: string
           updated_at: string
           valor_venda: number
           veiculo_id: string
@@ -512,6 +516,7 @@ export type Database = {
           placa_busca: string
           responsavel_id: string | null
           status: Database["public"]["Enums"]["status_demanda"]
+          status_desde: string
           updated_at: string
           valor_venda: number
           veiculo_id: string

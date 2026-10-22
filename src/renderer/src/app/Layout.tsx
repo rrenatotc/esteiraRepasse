@@ -6,6 +6,7 @@ import { useOnline } from '@renderer/hooks/useOnline'
 import { cn } from '@renderer/lib/utils'
 import { useAuth } from './auth'
 import { NAVEGACAO } from './navegacao'
+import { useContadorNovas, useRealtime } from './useRealtime'
 
 export function AvisoSemRede(): React.JSX.Element | null {
   const online = useOnline()
@@ -24,6 +25,8 @@ export function Layout(): React.JSX.Element {
   const itens = perfil ? NAVEGACAO[perfil.papel] : []
   const repasse = perfil?.papel === 'repasse'
   useEstoqueRepasse(repasse)
+  useRealtime(perfil)
+  const novas = useContadorNovas(repasse)
 
   return (
     <div className="flex h-full">
@@ -47,6 +50,12 @@ export function Layout(): React.JSX.Element {
               >
                 <Icone className="size-5" strokeWidth={1.75} aria-hidden />
                 <span className="text-center">{rotulo}</span>
+                {rota === '/app/fila' && novas > 0 && (
+                  <span className="numeros absolute top-1 right-2 min-w-4 rounded-full bg-azul-placa px-1 text-center text-[10px] leading-4 font-semibold text-white">
+                    {novas > 99 ? '99+' : novas}
+                    <span className="sr-only"> demandas novas</span>
+                  </span>
+                )}
               </NavLink>
             </li>
           ))}

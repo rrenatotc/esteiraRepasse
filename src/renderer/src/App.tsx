@@ -9,7 +9,10 @@ import { Entrar } from './features/auth/Entrar'
 import { Configuracoes } from './features/configuracoes/Configuracoes'
 import { ConsultaPublica } from './features/consulta/ConsultaPublica'
 import { Estoque } from './features/estoque/Estoque'
+import { Fila } from './features/fila/Fila'
+import { Lojas } from './features/lojas/Lojas'
 import { Lojistas } from './features/lojistas/Lojistas'
+import { Usuarios } from './features/usuarios/Usuarios'
 import { RegistrarVenda } from './features/vendas/RegistrarVenda'
 
 const queryClient = new QueryClient({
@@ -60,7 +63,7 @@ const router = createHashRouter([
             path: 'fila/:id?',
             element: (
               <Protegida papeis={['repasse', 'gestor']}>
-                <EmConstrucao titulo="Fila de demandas" fase={4} descricao="Lista densa com detalhe ao lado, ações por status, atalhos e notificações." />
+                <Fila />
               </Protegida>
             )
           },
@@ -84,7 +87,7 @@ const router = createHashRouter([
             path: 'usuarios',
             element: (
               <Protegida papeis={['repasse']}>
-                <EmConstrucao titulo="Usuários" fase={4} descricao="Convite por e-mail, papel, loja e ativação." />
+                <Usuarios />
               </Protegida>
             )
           },
@@ -92,7 +95,7 @@ const router = createHashRouter([
             path: 'lojas',
             element: (
               <Protegida papeis={['repasse']}>
-                <EmConstrucao titulo="Lojas" fase={4} descricao="As 11 lojas do grupo, com código do Bravos." />
+                <Lojas />
               </Protegida>
             )
           },

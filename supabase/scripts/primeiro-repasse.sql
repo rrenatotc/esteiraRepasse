@@ -1,5 +1,5 @@
--- Cria o primeiro operador do repasse (só uma vez, depois disso os
--- usuários são convidados pelo próprio app).
+-- Cria o primeiro operador do repasse (só uma vez). Os demais usuários
+-- também são criados no painel, mas ativados pela tela Usuários do app.
 --
 -- 1. No painel do Supabase: Authentication → Users → Add user → Create new user
 --    (e-mail + senha, marque "Auto Confirm User").

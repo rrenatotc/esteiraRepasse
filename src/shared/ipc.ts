@@ -21,7 +21,16 @@ export type Notificacao = z.infer<typeof notificacaoSchema>
 
 export const booleanoSchema = z.boolean()
 
-export const contadorSchema = z.number().int().min(0).max(9999)
+export const contadorSchema = z.object({
+  total: z.number().int().min(0).max(9999),
+  /** Selo para a barra de tarefas, desenhado no renderer (PNG em data URL). */
+  icone: z
+    .string()
+    .regex(/^data:image\/png;base64,[A-Za-z0-9+/=]+$/)
+    .max(50_000)
+    .nullable()
+})
+export type Contador = z.infer<typeof contadorSchema>
 
 export const urlExternaSchema = z
   .string()

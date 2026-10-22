@@ -218,3 +218,20 @@ describe('repasse', () => {
     ).rejects.toThrow(/permission denied/)
   })
 })
+
+describe('perfis: trava do último repasse', () => {
+  it('não deixa desativar nem rebaixar o único repasse ativo', async () => {
+    await expect(
+      como(db, { uid: repasse }, (tx) => tx.query(`update public.perfis set ativo = false where id = $1`, [repasse]))
+    ).rejects.toThrow('Precisa existir pelo menos um usuário do repasse ativo.')
+    await expect(
+      como(db, { uid: repasse }, (tx) => tx.query(`update public.perfis set papel = 'gestor' where id = $1`, [repasse]))
+    ).rejects.toThrow('Precisa existir pelo menos um usuário do repasse ativo.')
+  })
+
+  it('com outro repasse ativo, pode', async () => {
+    const outro = await criarUsuario(db, { email: 'outro-repasse@x.com', papel: 'repasse' })
+    await como(db, { uid: repasse }, (tx) => tx.query(`update public.perfis set ativo = false where id = $1`, [outro]))
+  })
+})
+

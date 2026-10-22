@@ -2,7 +2,7 @@
 import { contextBridge, ipcRenderer, type IpcRendererEvent } from 'electron'
 import { CANAIS } from '../shared/canais'
 import type { LeituraEstoque, StatusObservacao } from '../shared/estoque'
-import type { AppInfo, Config, Notificacao } from '../shared/ipc'
+import type { AppInfo, Config, Contador, Notificacao } from '../shared/ipc'
 
 const api = {
   sessao: {
@@ -14,7 +14,7 @@ const api = {
   app: {
     info: (): Promise<AppInfo> => ipcRenderer.invoke(CANAIS.appInfo),
     notificar: (n: Notificacao): Promise<void> => ipcRenderer.invoke(CANAIS.appNotificar, n),
-    contador: (total: number): Promise<void> => ipcRenderer.invoke(CANAIS.appContador, total),
+    contador: (c: Contador): Promise<void> => ipcRenderer.invoke(CANAIS.appContador, c),
     abrirExterno: (url: string): Promise<void> => ipcRenderer.invoke(CANAIS.appAbrirExterno, url),
     onNavegar: (cb: (rota: string) => void): (() => void) => {
       const ouvinte = (_: IpcRendererEvent, rota: string): void => cb(rota)

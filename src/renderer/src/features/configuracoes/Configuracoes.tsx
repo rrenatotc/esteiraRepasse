@@ -4,6 +4,9 @@ import type { Config } from '@shared/ipc'
 import { useAuth } from '@renderer/app/auth'
 import { Pagina } from '@renderer/components/Pagina'
 import { Button } from '@renderer/components/ui/button'
+import { Campo, Input } from '@renderer/components/ui/campo'
+import { mensagemErro } from '@renderer/lib/erros'
+import { supabase } from '@renderer/lib/supabase'
 import { CHAVES } from '@renderer/features/estoque/useEstoqueRepasse'
 
 const ROTULO_PAPEL = { vendedor: 'Vendedor', repasse: 'Repasse', gestor: 'Gestor' } as const
@@ -41,6 +44,60 @@ function Alternar({
         <span className="block text-[13px] text-grafite">{descricao}</span>
       </span>
     </label>
+  )
+}
+
+function TrocarSenha(): React.JSX.Element {
+  const [aberto, setAberto] = useState(false)
+  const [senha, setSenha] = useState('')
+  const [confirmacao, setConfirmacao] = useState('')
+  const trocar = useMutation({
+    mutationFn: async () => {
+      const { error } = await supabase.auth.updateUser({ password: senha })
+      if (error) throw error
+    },
+    onSuccess: () => {
+      setSenha('')
+      setConfirmacao('')
+      setAberto(false)
+    }
+  })
+  const curta = senha.length > 0 && senha.length < 8
+  const diferente = confirmacao.length > 0 && confirmacao !== senha
+  if (!aberto) {
+    return (
+      <div className="mt-4 flex items-center gap-3">
+        <Button variante="secundario" onClick={() => setAberto(true)}>
+          Trocar senha
+        </Button>
+        {trocar.isSuccess && <span className="text-[13px] text-status-faturada">Senha trocada.</span>}
+      </div>
+    )
+  }
+  return (
+    <form
+      className="mt-4 grid max-w-md gap-3"
+      onSubmit={(e) => {
+        e.preventDefault()
+        if (senha.length >= 8 && senha === confirmacao) trocar.mutate()
+      }}
+    >
+      <Campo rotulo="Nova senha" erro={curta ? 'Use pelo menos 8 caracteres.' : undefined}>
+        {(p) => <Input {...p} type="password" autoComplete="new-password" autoFocus value={senha} onChange={(e) => setSenha(e.target.value)} />}
+      </Campo>
+      <Campo rotulo="Repita a nova senha" erro={diferente ? 'As senhas não são iguais.' : undefined}>
+        {(p) => <Input {...p} type="password" autoComplete="new-password" value={confirmacao} onChange={(e) => setConfirmacao(e.target.value)} />}
+      </Campo>
+      {trocar.isError && <p className="text-[13px] text-erro">{mensagemErro(trocar.error)}</p>}
+      <div className="flex gap-2">
+        <Button type="submit" disabled={senha.length < 8 || senha !== confirmacao || trocar.isPending}>
+          {trocar.isPending ? 'Salvando…' : 'Salvar nova senha'}
+        </Button>
+        <Button variante="fantasma" onClick={() => setAberto(false)}>
+          Cancelar
+        </Button>
+      </div>
+    </form>
   )
 }
 
@@ -100,7 +157,8 @@ export function Configuracoes(): React.JSX.Element {
           <dt className="text-grafite">Loja</dt>
           <dd>{perfil?.loja ? `${perfil.loja.codigo} ${perfil.loja.nome}` : '—'}</dd>
         </dl>
-        <Button variante="secundario" className="mt-4" onClick={() => void sair()}>
+        <TrocarSenha />
+        <Button variante="fantasma" className="mt-2 -ml-4" onClick={() => void sair()}>
           Sair da conta
         </Button>
       </Secao>
