@@ -12,3 +12,4 @@ supabase/.branches
 screenshots/
 test-results/
 playwright-report/
+release-*/
