@@ -39,3 +39,23 @@ Para o Renato. Os PCs com o app instalado procuram atualização ao abrir e a ca
 ```powershell
 npm run build:win
 ```
+
+## Publicar pela página do GitHub (sem token)
+
+Se o `npm run release` não estiver disponível, dá para publicar à mão:
+
+1. Gere os arquivos (se o app estiver aberto a partir de `dist`, use outra pasta de saída):
+
+   ```powershell
+   npm run build
+   npx electron-builder --win --publish never --config.directories.output=dist-release
+   ```
+
+2. Em https://github.com/rrenatotc/esteiraRepasse/releases/new:
+   - **Choose a tag:** digite `v1.0.0` (com o número da versão) e clique em "Create new tag".
+   - **Release title:** `1.0.0`.
+   - Arraste para a área de anexos os **três** arquivos de `dist-release`:
+     `EsteiraRepasse-Setup-x.y.z.exe`, `EsteiraRepasse-Setup-x.y.z.exe.blockmap` e `latest.yml`.
+   - Deixe marcado **Set as the latest release** e clique em **Publish release**.
+
+Sem o `latest.yml` o app instalado não enxerga a versão nova.

@@ -13,3 +13,4 @@ screenshots/
 test-results/
 playwright-report/
 release-*/
+dist-release/
