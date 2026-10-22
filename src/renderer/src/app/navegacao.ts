@@ -26,6 +26,9 @@ export const NAVEGACAO: Record<PapelUsuario, ItemNav[]> = {
   vendedor: [
     { rota: '/app/vendas/nova', rotulo: 'Registrar', icone: PlusCircle },
     { rota: '/app/vendas', rotulo: 'Minhas vendas', icone: ClipboardList },
+    { rota: '/app/estoque', rotulo: 'Estoque', icone: Car },
+    { rota: '/app/lojas', rotulo: 'Lojas', icone: Store },
+    { rota: '/app/painel', rotulo: 'Painel', icone: BarChart3 },
     CONSULTAR,
     CONFIGURACOES
   ],
@@ -42,6 +45,8 @@ export const NAVEGACAO: Record<PapelUsuario, ItemNav[]> = {
   gestor: [
     { rota: '/app/painel', rotulo: 'Painel', icone: BarChart3 },
     { rota: '/app/fila', rotulo: 'Demandas', icone: ListChecks },
+    { rota: '/app/estoque', rotulo: 'Estoque', icone: Car },
+    { rota: '/app/lojas', rotulo: 'Lojas', icone: Store },
     CONSULTAR,
     CONFIGURACOES
   ]

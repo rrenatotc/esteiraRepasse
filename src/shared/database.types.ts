@@ -561,6 +561,7 @@ export type Database = {
         Returns: Database["public"]["Enums"]["papel_usuario"]
       }
       placa_para_mercosul: { Args: { p: string }; Returns: string }
+      pode_ver_painel: { Args: never; Returns: boolean }
       previa_estoque: { Args: { p_itens: Json }; Returns: Json }
       registrar_consulta_publica: {
         Args: { p_chave_hash: string; p_ip_hash: string; p_placa_busca: string }

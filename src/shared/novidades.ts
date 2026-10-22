@@ -9,6 +9,11 @@ export interface Novidade {
 
 export const NOVIDADES: Novidade[] = [
   {
+    versao: '1.0.1',
+    data: '2026-10-22',
+    itens: ['Vendedores agora também veem o Painel, o Estoque e as Lojas (só para consulta).']
+  },
+  {
     versao: '1.0.0',
     data: '2026-10-22',
     itens: [

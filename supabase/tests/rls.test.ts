@@ -114,11 +114,11 @@ describe('vendedor', () => {
     })
   })
 
-  it('lê lojas, veículos e lojistas; não lê importações', async () => {
+  it('lê lojas, veículos, lojistas e o histórico de importações', async () => {
     expect(await contar({ uid: vendedorA }, 'lojas')).toBe(11)
     expect(await contar({ uid: vendedorA }, 'veiculos')).toBeGreaterThan(0)
     expect(await contar({ uid: vendedorA }, 'lojistas')).toBe(1)
-    expect(await contar({ uid: vendedorA }, 'importacoes_estoque')).toBe(0)
+    expect(await contar({ uid: vendedorA }, 'importacoes_estoque')).toBe(1)
   })
 
   it('cadastra veículo manual fora do estoque, mas não como bravos', async () => {

@@ -92,8 +92,8 @@ describe('indicadores_painel', () => {
     expect(Number(r.valor_faturado)).toBe(0)
   })
 
-  it('vendedor não vê o painel; período invertido é rejeitado', async () => {
-    await expect(painel(vendedor)).rejects.toThrow('Apenas repasse e gestão veem o painel.')
+  it('vendedor também vê o painel; período invertido é rejeitado', async () => {
+    expect((await painel(vendedor)).faturadas).toBe(2)
     await expect(painel(gestor, '2026-10-31', '2026-10-01')).rejects.toThrow('Período inválido.')
   })
 })

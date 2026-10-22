@@ -89,7 +89,7 @@ const router = createHashRouter([
           {
             path: 'estoque',
             element: (
-              <Protegida papeis={['repasse']}>
+              <Protegida papeis={['repasse', 'gestor', 'vendedor']}>
                 <Estoque />
               </Protegida>
             )
@@ -113,7 +113,7 @@ const router = createHashRouter([
           {
             path: 'lojas',
             element: (
-              <Protegida papeis={['repasse']}>
+              <Protegida papeis={['repasse', 'gestor', 'vendedor']}>
                 <Lojas />
               </Protegida>
             )
@@ -121,7 +121,7 @@ const router = createHashRouter([
           {
             path: 'painel',
             element: (
-              <Protegida papeis={['gestor', 'repasse']}>
+              <Protegida papeis={['repasse', 'gestor', 'vendedor']}>
                 <Painel />
               </Protegida>
             )
