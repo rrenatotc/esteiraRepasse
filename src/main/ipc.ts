@@ -13,6 +13,7 @@ import {
   contadorSchema,
   notificacaoSchema,
   salvarArquivoSchema,
+  exportarPlanilhaSchema,
   urlExternaSchema,
   valorSessaoSchema,
   validarPayload,
@@ -26,6 +27,7 @@ import { novidadesDesde, type Novidade } from '../shared/novidades'
 import { estadoAtualizacao, procurarAtualizacao, reiniciarParaAtualizar } from './updater'
 import { janelaPrincipal } from './janela'
 import { notificar } from './notificacoes'
+import { exportarPlanilha } from './planilha'
 import { lerSessao, removerSessao, salvarSessao } from './sessao'
 import { lerConfig, store } from './store'
 
@@ -97,6 +99,10 @@ export function registrarIpc(): void {
     log.info(`Exportação salva em ${filePath}`)
     return filePath
   })
+
+  tratar(CANAIS.planilhaExportar, (payload) =>
+    exportarPlanilha(validar(exportarPlanilhaSchema, payload, CANAIS.planilhaExportar))
+  )
 
   tratar(CANAIS.atualizacaoEstado, () => estadoAtualizacao())
   tratar(CANAIS.atualizacaoProcurar, () => procurarAtualizacao())

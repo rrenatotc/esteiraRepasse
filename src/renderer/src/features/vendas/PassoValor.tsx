@@ -3,6 +3,9 @@ import { useState, type FormEvent } from 'react'
 import { centavosDeTexto, formatarCentavos } from '@shared/moeda'
 import { Button } from '@renderer/components/ui/button'
 import { Campo, Input } from '@renderer/components/ui/campo'
+import { listarAnunciantes } from '@renderer/features/planilha/api'
+import { CamposPlanilha } from '@renderer/features/planilha/campos'
+import { errosPlanilha, type DadosPlanilha } from '@renderer/features/planilha/dados'
 import { listarLojas } from './api'
 import { AreaTexto, Rodape, Selecao } from './componentes'
 
@@ -10,6 +13,8 @@ export interface DadosValor {
   centavos: number | null
   lojaId: number | null
   observacao: string
+  /** Só no registro; a correção da venda não mexe na planilha. */
+  planilha?: DadosPlanilha
 }
 
 export function PassoValor({
@@ -25,6 +30,9 @@ export function PassoValor({
   const [valor, setValor] = useState(inicial.centavos ? formatarCentavos(inicial.centavos) : '')
   const [lojaId, setLojaId] = useState<number | null>(inicial.lojaId)
   const [observacao, setObservacao] = useState(inicial.observacao)
+  const [planilha, setPlanilha] = useState(inicial.planilha)
+  const anunciantes = useQuery({ queryKey: ['planilha', 'anunciantes'], queryFn: listarAnunciantes, staleTime: 5 * 60_000, enabled: !!planilha })
+  const loja = lojas.data?.find((l) => l.id === lojaId)
   const [tocado, setTocado] = useState(false)
 
   const centavos = centavosDeTexto(valor)
@@ -32,11 +40,12 @@ export function PassoValor({
     tocado && valor.trim() !== '' && (centavos === null || centavos <= 0)
       ? 'Digite um valor maior que zero, por exemplo 68.500,00.'
       : undefined
-  const podeAvancar = centavos !== null && centavos > 0 && lojaId !== null
+  const podeAvancar =
+    centavos !== null && centavos > 0 && lojaId !== null && (!planilha || Object.keys(errosPlanilha(planilha)).length === 0)
 
   function avancar(e: FormEvent): void {
     e.preventDefault()
-    if (podeAvancar) onAvancar({ centavos, lojaId, observacao: observacao.trim() })
+    if (podeAvancar) onAvancar({ centavos, lojaId, observacao: observacao.trim(), planilha })
   }
 
   return (
@@ -84,6 +93,22 @@ export function PassoValor({
           {(p) => <AreaTexto {...p} value={observacao} onChange={(e) => setObservacao(e.target.value)} maxLength={1000} />}
         </Campo>
       </div>
+      {planilha && (
+        <>
+          <h3 className="mt-8 mb-1 text-[15px] font-semibold">Planilha de vendas</h3>
+          <p className="mb-5 text-[13px] text-grafite">
+            Vai direto para a planilha do mês. O que não souber agora dá para completar depois na aba Planilha.
+          </p>
+          <div className="max-w-[560px]">
+            <CamposPlanilha
+              valor={planilha}
+              onChange={setPlanilha}
+              anunciantes={anunciantes.data}
+              placeholderAnunciante={loja ? loja.nome.toUpperCase() : undefined}
+            />
+          </div>
+        </>
+      )}
       <Rodape>
         <Button variante="secundario" onClick={onVoltar}>
           Voltar

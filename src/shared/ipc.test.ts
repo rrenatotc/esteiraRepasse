@@ -5,6 +5,7 @@ import {
   configParcialSchema,
   notificacaoSchema,
   salvarArquivoSchema,
+  exportarPlanilhaSchema,
   PayloadInvalidoError,
   urlExternaSchema,
   validarPayload
@@ -60,5 +61,17 @@ describe('validarPayload', () => {
     rejeita(() => validarPayload(salvarArquivoSchema, { nome: 'C:/x.csv', base64: '' }, 'x'))
     rejeita(() => validarPayload(salvarArquivoSchema, { nome: 'virus.exe', base64: '' }, 'x'))
     rejeita(() => validarPayload(salvarArquivoSchema, { nome: 'a.csv', base64: 'não é base64' }, 'x'))
+  })
+
+  it('exportar planilha: mês AAAA-MM e linhas no formato do gerador', () => {
+    const linha = {
+      anunciante: 'PORTO ALEGRE', placa: 'IYE1206', veiculo: 'CRETA', ano: '2017/2018', fipe: 81954, valor_compra: 64000,
+      valor_vendido: 66000, dias_estoque: 3, classificacao: 'D', transf_margem: null, tipo_venda: 'GRUPO', lojista: 'KLIPPEL',
+      data_venda: '2026-10-02', faturado: 'SIM', repassador: null
+    }
+    expect(validarPayload(exportarPlanilhaSchema, { mes: '2026-10', linhas: [linha] }, 'x').linhas).toHaveLength(1)
+    rejeita(() => validarPayload(exportarPlanilhaSchema, { mes: '2026-13', linhas: [] }, 'x'))
+    rejeita(() => validarPayload(exportarPlanilhaSchema, { mes: '2026-10', linhas: [{ ...linha, fipe: 'abc' }] }, 'x'))
+    rejeita(() => validarPayload(exportarPlanilhaSchema, { mes: '2026-10', linhas: [{ ...linha, data_venda: '02/10/2026' }] }, 'x'))
   })
 })

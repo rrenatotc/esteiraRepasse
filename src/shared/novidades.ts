@@ -9,6 +9,15 @@ export interface Novidade {
 
 export const NOVIDADES: Novidade[] = [
   {
+    versao: '1.1.0',
+    data: '2026-10-28',
+    itens: [
+      'Nova aba Planilha: as vendas do mês entram sozinhas na planilha, com as mesmas colunas e totais.',
+      'Ao registrar a venda, preencha FIPE, valor de compra, classificação, tipo de venda e repassador.',
+      'Na Planilha dá para editar ou excluir as suas vendas e exportar o arquivo do mês para o Excel.'
+    ]
+  },
+  {
     versao: '1.0.1',
     data: '2026-10-22',
     itens: ['Vendedores agora também veem o Painel, o Estoque e as Lojas (só para consulta).']

@@ -28,6 +28,35 @@ export const salvarArquivoSchema = z.object({
 })
 export type SalvarArquivo = z.infer<typeof salvarArquivoSchema>
 
+/** Planilha de vendas do mês: o main preenche o modelo e pergunta onde salvar. */
+const textoPlanilha = z.string().max(300).nullable()
+const valorPlanilha = z.number().finite().min(-1e10).max(1e10).nullable()
+export const exportarPlanilhaSchema = z.object({
+  mes: z.string().regex(/^\d{4}-(0[1-9]|1[0-2])$/),
+  linhas: z
+    .array(
+      z.object({
+        anunciante: textoPlanilha,
+        placa: z.string().min(1).max(20),
+        veiculo: textoPlanilha,
+        ano: textoPlanilha,
+        fipe: valorPlanilha,
+        valor_compra: valorPlanilha,
+        valor_vendido: valorPlanilha,
+        dias_estoque: z.number().int().min(0).max(100_000).nullable(),
+        classificacao: textoPlanilha,
+        transf_margem: valorPlanilha,
+        tipo_venda: textoPlanilha,
+        lojista: textoPlanilha,
+        data_venda: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
+        faturado: textoPlanilha,
+        repassador: textoPlanilha
+      })
+    )
+    .max(20_000)
+})
+export type ExportarPlanilha = z.infer<typeof exportarPlanilhaSchema>
+
 export const contadorSchema = z.object({
   total: z.number().int().min(0).max(9999),
   /** Selo para a barra de tarefas, desenhado no renderer (PNG em data URL). */

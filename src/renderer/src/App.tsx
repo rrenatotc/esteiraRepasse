@@ -12,6 +12,7 @@ import { Estoque } from './features/estoque/Estoque'
 import { Fila } from './features/fila/Fila'
 import { Lojas } from './features/lojas/Lojas'
 import { Painel } from './features/painel/Painel'
+import { Planilha } from './features/planilha/Planilha'
 import { Lojistas } from './features/lojistas/Lojistas'
 import { Usuarios } from './features/usuarios/Usuarios'
 import { CorrigirVenda } from './features/vendas/CorrigirVenda'
@@ -115,6 +116,14 @@ const router = createHashRouter([
             element: (
               <Protegida papeis={['repasse', 'gestor', 'vendedor']}>
                 <Lojas />
+              </Protegida>
+            )
+          },
+          {
+            path: 'planilha',
+            element: (
+              <Protegida papeis={['repasse', 'gestor', 'vendedor']}>
+                <Planilha />
               </Protegida>
             )
           },

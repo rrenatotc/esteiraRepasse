@@ -7,6 +7,7 @@ import {
   PlusCircle,
   Search,
   Settings,
+  Sheet,
   Store,
   Users,
   type LucideIcon
@@ -20,12 +21,14 @@ export interface ItemNav {
 }
 
 const CONSULTAR: ItemNav = { rota: '/app/consulta', rotulo: 'Consultar', icone: Search }
+const PLANILHA: ItemNav = { rota: '/app/planilha', rotulo: 'Planilha', icone: Sheet }
 const CONFIGURACOES: ItemNav = { rota: '/app/configuracoes', rotulo: 'Ajustes', icone: Settings }
 
 export const NAVEGACAO: Record<PapelUsuario, ItemNav[]> = {
   vendedor: [
     { rota: '/app/vendas/nova', rotulo: 'Registrar', icone: PlusCircle },
     { rota: '/app/vendas', rotulo: 'Minhas vendas', icone: ClipboardList },
+    PLANILHA,
     { rota: '/app/estoque', rotulo: 'Estoque', icone: Car },
     { rota: '/app/lojas', rotulo: 'Lojas', icone: Store },
     { rota: '/app/painel', rotulo: 'Painel', icone: BarChart3 },
@@ -34,6 +37,7 @@ export const NAVEGACAO: Record<PapelUsuario, ItemNav[]> = {
   ],
   repasse: [
     { rota: '/app/fila', rotulo: 'Fila', icone: ListChecks },
+    PLANILHA,
     { rota: '/app/estoque', rotulo: 'Estoque', icone: Car },
     { rota: '/app/lojistas', rotulo: 'Lojistas', icone: Building2 },
     { rota: '/app/usuarios', rotulo: 'Usuários', icone: Users },
@@ -45,6 +49,7 @@ export const NAVEGACAO: Record<PapelUsuario, ItemNav[]> = {
   gestor: [
     { rota: '/app/painel', rotulo: 'Painel', icone: BarChart3 },
     { rota: '/app/fila', rotulo: 'Demandas', icone: ListChecks },
+    PLANILHA,
     { rota: '/app/estoque', rotulo: 'Estoque', icone: Car },
     { rota: '/app/lojas', rotulo: 'Lojas', icone: Store },
     CONSULTAR,

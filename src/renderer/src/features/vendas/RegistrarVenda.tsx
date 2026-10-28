@@ -12,6 +12,7 @@ import { Placa } from '@renderer/components/Placa'
 import { Button, botao } from '@renderer/components/ui/button'
 import { useOnline } from '@renderer/hooks/useOnline'
 import { mensagemErro } from '@renderer/lib/erros'
+import { jsonPlanilha, PLANILHA_VAZIA, type DadosPlanilha } from '@renderer/features/planilha/dados'
 import { listarLojas, registrarVenda } from './api'
 import { Etapas, Mensagem, Rodape } from './componentes'
 import { PassoLojista, type DadosLojista } from './PassoLojista'
@@ -28,7 +29,7 @@ function novoRascunho(lojaId: number | null): Rascunho {
   return {
     placa: { placa: '', veiculo: null, manual: null },
     lojista: { documento: '', lojista: null, novo: null },
-    valor: { centavos: null, lojaId, observacao: '' }
+    valor: { centavos: null, lojaId, observacao: '', planilha: PLANILHA_VAZIA }
   }
 }
 
@@ -38,6 +39,28 @@ function Linha({ rotulo, children }: { rotulo: string; children: React.ReactNode
       <dt className="text-grafite">{rotulo}</dt>
       <dd className="min-w-0">{children}</dd>
     </div>
+  )
+}
+
+function ResumoPlanilha({ planilha }: { planilha: DadosPlanilha }): React.JSX.Element {
+  const itens = [
+    ['Anunciante', planilha.anunciante],
+    ['FIPE', planilha.fipe && `R$ ${planilha.fipe}`],
+    ['Compra', planilha.valorCompra && `R$ ${planilha.valorCompra}`],
+    ['Classificação', planilha.classificacao],
+    ['Tipo', planilha.tipoVenda],
+    ['Transf. margem', planilha.transfMargem && `R$ ${planilha.transfMargem}`],
+    ['Repassador', planilha.repassador]
+  ].filter(([, v]) => v)
+  if (itens.length === 0) return <span className="text-grafite">Nada preenchido (dá para completar na aba Planilha).</span>
+  return (
+    <span className="text-[13px]">
+      {itens.map(([r, v]) => (
+        <span key={r} className="mr-4 inline-block">
+          <span className="text-grafite">{r}:</span> <span className="numeros">{v}</span>
+        </span>
+      ))}
+    </span>
   )
 }
 
@@ -69,10 +92,12 @@ function Revisao({
         observacao: valor.observacao,
         veiculoManual: placa.veiculo ? null : placa.manual,
         lojistaId: lojista.lojista?.id ?? null,
-        lojistaNovo: lojista.lojista ? null : lojista.novo
+        lojistaNovo: lojista.lojista ? null : lojista.novo,
+        planilha: jsonPlanilha(valor.planilha ?? PLANILHA_VAZIA)
       }),
     onSuccess: (d) => {
       void queryClient.invalidateQueries({ queryKey: ['vendas'] })
+      void queryClient.invalidateQueries({ queryKey: ['planilha'] })
       onRegistrada(d)
     }
   })
@@ -107,6 +132,10 @@ function Revisao({
         </Linha>
         <Linha rotulo="Loja da proposta">{loja ? `${loja.codigo} ${loja.nome}` : '—'}</Linha>
         {valor.observacao && <Linha rotulo="Observação">{valor.observacao}</Linha>}
+        <Linha rotulo="Planilha">
+          <ResumoPlanilha planilha={valor.planilha ?? PLANILHA_VAZIA} />
+          {editar(2)}
+        </Linha>
       </dl>
 
       <div className="mt-4 flex flex-col gap-2">

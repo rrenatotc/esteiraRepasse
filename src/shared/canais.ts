@@ -18,6 +18,7 @@ export const CANAIS = {
   estoqueUltimaLeitura: 'estoque:ultima-leitura',
   eventoEstoqueNovoArquivo: 'evento:estoque-novo-arquivo',
   arquivoSalvar: 'arquivo:salvar',
+  planilhaExportar: 'planilha:exportar',
   atualizacaoEstado: 'atualizacao:estado',
   atualizacaoProcurar: 'atualizacao:procurar',
   atualizacaoReiniciar: 'atualizacao:reiniciar',

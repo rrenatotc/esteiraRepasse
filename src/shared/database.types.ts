@@ -368,6 +368,103 @@ export type Database = {
           },
         ]
       }
+      planilha_vendas: {
+        Row: {
+          ano: string | null
+          anunciante: string | null
+          classificacao: string | null
+          created_at: string
+          data_venda: string
+          demanda_id: string
+          dias_estoque: number | null
+          excluida_em: string | null
+          faturado: string | null
+          fipe: number | null
+          lojista: string | null
+          motivo_exclusao: string | null
+          placa: string
+          repassador: string | null
+          tipo_venda: string | null
+          transf_margem: number | null
+          updated_at: string
+          updated_by: string | null
+          valor_compra: number | null
+          valor_vendido: number | null
+          veiculo: string | null
+          vendedor_id: string
+        }
+        Insert: {
+          ano?: string | null
+          anunciante?: string | null
+          classificacao?: string | null
+          created_at?: string
+          data_venda: string
+          demanda_id: string
+          dias_estoque?: number | null
+          excluida_em?: string | null
+          faturado?: string | null
+          fipe?: number | null
+          lojista?: string | null
+          motivo_exclusao?: string | null
+          placa: string
+          repassador?: string | null
+          tipo_venda?: string | null
+          transf_margem?: number | null
+          updated_at?: string
+          updated_by?: string | null
+          valor_compra?: number | null
+          valor_vendido?: number | null
+          veiculo?: string | null
+          vendedor_id: string
+        }
+        Update: {
+          ano?: string | null
+          anunciante?: string | null
+          classificacao?: string | null
+          created_at?: string
+          data_venda?: string
+          demanda_id?: string
+          dias_estoque?: number | null
+          excluida_em?: string | null
+          faturado?: string | null
+          fipe?: number | null
+          lojista?: string | null
+          motivo_exclusao?: string | null
+          placa?: string
+          repassador?: string | null
+          tipo_venda?: string | null
+          transf_margem?: number | null
+          updated_at?: string
+          updated_by?: string | null
+          valor_compra?: number | null
+          valor_vendido?: number | null
+          veiculo?: string | null
+          vendedor_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "planilha_vendas_demanda_id_fkey"
+            columns: ["demanda_id"]
+            isOneToOne: true
+            referencedRelation: "demandas"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "planilha_vendas_updated_by_fkey"
+            columns: ["updated_by"]
+            isOneToOne: false
+            referencedRelation: "perfis"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "planilha_vendas_vendedor_id_fkey"
+            columns: ["vendedor_id"]
+            isOneToOne: false
+            referencedRelation: "perfis"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       veiculos: {
         Row: {
           ano_fabricacao: number | null
@@ -545,7 +642,73 @@ export type Database = {
           isSetofReturn: false
         }
       }
+      editar_linha_planilha: {
+        Args: { p_dados: Json; p_demanda: string }
+        Returns: {
+          ano: string | null
+          anunciante: string | null
+          classificacao: string | null
+          created_at: string
+          data_venda: string
+          demanda_id: string
+          dias_estoque: number | null
+          excluida_em: string | null
+          faturado: string | null
+          fipe: number | null
+          lojista: string | null
+          motivo_exclusao: string | null
+          placa: string
+          repassador: string | null
+          tipo_venda: string | null
+          transf_margem: number | null
+          updated_at: string
+          updated_by: string | null
+          valor_compra: number | null
+          valor_vendido: number | null
+          veiculo: string | null
+          vendedor_id: string
+        }
+        SetofOptions: {
+          from: "*"
+          to: "planilha_vendas"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
       estoque_atualizado_em: { Args: never; Returns: string }
+      excluir_linha_planilha: {
+        Args: { p_demanda: string; p_motivo: string }
+        Returns: {
+          ano: string | null
+          anunciante: string | null
+          classificacao: string | null
+          created_at: string
+          data_venda: string
+          demanda_id: string
+          dias_estoque: number | null
+          excluida_em: string | null
+          faturado: string | null
+          fipe: number | null
+          lojista: string | null
+          motivo_exclusao: string | null
+          placa: string
+          repassador: string | null
+          tipo_venda: string | null
+          transf_margem: number | null
+          updated_at: string
+          updated_by: string | null
+          valor_compra: number | null
+          valor_vendido: number | null
+          veiculo: string | null
+          vendedor_id: string
+        }
+        SetofOptions: {
+          from: "*"
+          to: "planilha_vendas"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
       horas_uteis_entre: {
         Args: { p_fim: string; p_inicio: string }
         Returns: number
@@ -561,6 +724,14 @@ export type Database = {
         Returns: Database["public"]["Enums"]["papel_usuario"]
       }
       placa_para_mercosul: { Args: { p: string }; Returns: string }
+      planilha_ano: { Args: { s: Json }; Returns: string }
+      planilha_lojista: { Args: { p_lojista: string }; Returns: string }
+      planilha_numero: {
+        Args: { p_chave: string; p_dados: Json }
+        Returns: number
+      }
+      planilha_pode_editar: { Args: { p_vendedor: string }; Returns: boolean }
+      planilha_veiculo: { Args: { s: Json }; Returns: string }
       pode_ver_painel: { Args: never; Returns: boolean }
       previa_estoque: { Args: { p_itens: Json }; Returns: Json }
       registrar_consulta_publica: {
@@ -574,6 +745,7 @@ export type Database = {
           p_lojista_novo?: Json
           p_observacao?: string
           p_placa: string
+          p_planilha?: Json
           p_valor_venda: number
           p_veiculo_manual?: Json
         }

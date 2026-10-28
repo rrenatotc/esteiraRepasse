@@ -18,6 +18,8 @@ files:
   - '!{.eslintcache,eslint.config.mjs,.prettierignore,.prettierrc.yaml,dev-app-update.yml,CHANGELOG.md,README.md}'
   - '!{.env,.env.*,.npmrc,pnpm-lock.yaml}'
   - '!{tsconfig.json,tsconfig.node.json,tsconfig.web.json}'
+  # Saídas de builds anteriores e de testes: sem isso entram no app.asar.
+  - '!{dist,dist-*,release-*,test-results,playwright-report}/**'
 asarUnpack:
   - resources/**
 win:

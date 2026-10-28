@@ -96,6 +96,8 @@ export interface NovaVenda {
   veiculoManual: VeiculoManual | null
   lojistaId: string | null
   lojistaNovo: LojistaNovo | null
+  /** Colunas da planilha de vendas (FIPE, compra...). */
+  planilha: Record<string, string | null>
 }
 
 export async function registrarVenda(v: NovaVenda): Promise<Demanda> {
@@ -108,7 +110,8 @@ export async function registrarVenda(v: NovaVenda): Promise<Demanda> {
     p_observacao: v.observacao || undefined,
     p_veiculo_manual: v.veiculoManual ?? undefined,
     p_lojista_id: v.lojistaId ?? undefined,
-    p_lojista_novo: v.lojistaNovo ?? undefined
+    p_lojista_novo: v.lojistaNovo ?? undefined,
+    p_planilha: v.planilha
   })
   if (error) throw error
   return data

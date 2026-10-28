@@ -2,7 +2,7 @@
 import { contextBridge, ipcRenderer, type IpcRendererEvent } from 'electron'
 import { CANAIS } from '../shared/canais'
 import type { LeituraEstoque, StatusObservacao } from '../shared/estoque'
-import type { AppInfo, Config, Contador, EstadoAtualizacao, Notificacao, SalvarArquivo } from '../shared/ipc'
+import type { AppInfo, Config, Contador, EstadoAtualizacao, ExportarPlanilha, Notificacao, SalvarArquivo } from '../shared/ipc'
 import type { Novidade } from '../shared/novidades'
 
 const api = {
@@ -50,6 +50,10 @@ const api = {
   arquivo: {
     /** Abre "Salvar como" e grava; devolve o caminho ou null se cancelado. */
     salvar: (a: SalvarArquivo): Promise<string | null> => ipcRenderer.invoke(CANAIS.arquivoSalvar, a)
+  },
+  planilha: {
+    /** Gera a planilha de vendas do mês, abre "Salvar como" e grava; null se cancelado. */
+    exportar: (p: ExportarPlanilha): Promise<string | null> => ipcRenderer.invoke(CANAIS.planilhaExportar, p)
   },
   config: {
     ler: (): Promise<Config> => ipcRenderer.invoke(CANAIS.configLer),
